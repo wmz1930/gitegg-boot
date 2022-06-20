@@ -4,6 +4,7 @@ import cn.hutool.core.text.StrPool;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.symmetric.DES;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitegg.boot.extension.justauth.dto.JustAuthSocialDTO;
 import com.gitegg.boot.extension.justauth.entity.JustAuthSocial;
 import com.gitegg.boot.extension.justauth.entity.JustAuthSocialUser;
@@ -168,13 +169,11 @@ public class SocialController {
             {
                 throw new BusinessException("未查询到第三方用户信息，请返回到登录页重试");
             }
-    
-//            JustAuthSocialInfoDTO justAuthSocialInfoDTO = BeanUtil.copyProperties(justAuthInfoResult.getData(), JustAuthSocialInfoDTO.class);
-            
-           // 查询用户是否存在，如果存在，那么直接调用绑定接口
-           User user = new User();
-           user.setMobile(socialBind.getPhoneNumber());
-           UserInfo userInfo = userService.queryUserInfo(user);
+
+            // 查询用户是否存在，如果存在，那么直接调用绑定接口
+            LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(User::getMobile, socialBind.getPhoneNumber());
+            User userInfo = userService.getOne(lambdaQueryWrapper);
            Long userId;
            // 判断返回信息
            if (null != userInfo && null != userInfo.getId()) {

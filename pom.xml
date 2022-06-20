@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.gitegg.boot</groupId>
+    <artifactId>gitegg-boot</artifactId>
+    <name>gitegg-boot</name>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!-- jdk版本1.8 -->
+        <java.version>1.8</java.version>
+        <!-- maven-compiler-plugin插件版本，Java代码编译 -->
+        <maven.plugin.version>3.8.1</maven.plugin.version>
+        <!-- maven编译时指定编码UTF-8 -->
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <!-- 项目统一字符集编码UTF-8 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 项目统一字符集编码UTF-8 -->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- GitEgg项目统一设置版本号 -->
+        <gitegg.project.version>1.0.3.RELEASE</gitegg.project.version>
+        <!-- SpringBoot版本号 -->
+        <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
+        <!-- hutool工具版本 -->
+        <hutool.version>5.5.1</hutool.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- gitegg-platform相关Jar包 -->
+            <dependency>
+                <groupId>com.gitegg.platform</groupId>
+                <artifactId>gitegg-platform-bom</artifactId>
+                <version>${gitegg.project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- gitegg Spring Boot自定义及扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-boot</artifactId>
+        </dependency>
+        <!-- gitegg-platform-oauth2 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-oauth2</artifactId>
+        </dependency>
+        <!-- gitegg数据库驱动及连接池 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-db</artifactId>
+        </dependency>
+        <!-- gitegg mybatis-plus -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-mybatis</artifactId>
+        </dependency>
+        <!-- gitegg扩展Mybatis Plus代码生成工具-->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-code-generator</artifactId>
+        </dependency>
+        <!-- gitegg 短信自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-sms-starter</artifactId>
+        </dependency>
+        <!-- gitegg 分布式存储自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-dfs-starter</artifactId>
+        </dependency>
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-captcha</artifactId>
+        </dependency>
+        <!-- gitegg cache自定义扩展 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- 第三方登录 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-justauth</artifactId>
+        </dependency>
+        <!-- 定时任务 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-xxl-job</artifactId>
+        </dependency>
+        <!-- Lombok 通过简单注解消除冗长代码  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- hutool Java常用工具包-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <!-- 增加分环境读取配置 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.jks</exclude>
+                </excludes>
+            </resource>
+            <!-- 解决jks被过滤掉的问题 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.jks</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <!-- 用于在编译（compile）阶段加入定制化参数，比如设置项目源码的jdk版本、编译的jdk版本，以及项目编码等 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${maven.compiler.encoding}</encoding>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <!-- 能够将Spring Boot应用打包为可执行的jar或war文件，然后以通常的方式运行Spring Boot应用 -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                    <configuration>
+                        <fork>true</fork>
+                        <finalName>${project.build.finalName}</finalName>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Docker 打包插件 -->
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>${jib.maven.plugin.version}</version>
+                    <!-- 绑定到Maven的install生命周期 ，此处如果不使用https，会有问题，需要设置sendCredentialsOverHttp=true-->
+                    <executions>
+                        <execution>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!--允许非https-->
+                        <allowInsecureRegistries>true</allowInsecureRegistries>
+                        <!-- 相当于Docerkfile中的FROM -->
+                        <from>
+                            <image>openjdk:8-jdk-alpine</image>
+                        </from>
+                        <to>
+                            <image>${docker.harbor.addr}/${docker.harbor.project}/${project.artifactId}:${project.version}</image>
+                            <auth>
+                                <username>${docker.harbor.username}</username>
+                                <password>${docker.harbor.password}</password>
+                            </auth>
+                        </to>
+                        <container>
+                            <!--jvm内存参数-->
+                            <jvmFlags>
+                                <jvmFlag>-Xms512m</jvmFlag>
+                                <jvmFlag>-Xmx4g</jvmFlag>
+                            </jvmFlags>
+                            <volumes>/giteggData</volumes>
+                            <workingDirectory>/gitegg</workingDirectory>
+                            <environment>
+                                <TZ>Asia/Shanghai</TZ>
+                            </environment>
+                            <!--使用该参数保证镜像的创建时间与系统时间一致-->
+                            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                            <format>OCI</format>
+                        </container>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <activation>
+                <!--默认为dev环境打包方式-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+                <docker.harbor.addr>172.16.20.175</docker.harbor.addr>
+                <docker.harbor.project>gitegg</docker.harbor.project>
+                <docker.harbor.username>robot$gitegg</docker.harbor.username>
+                <docker.harbor.password>Jqazyv7vvZiL6TXuNcv7TrZeRdL8U9n3</docker.harbor.password>
+            </properties>
+        </profile>
+    </profiles>
+</project>

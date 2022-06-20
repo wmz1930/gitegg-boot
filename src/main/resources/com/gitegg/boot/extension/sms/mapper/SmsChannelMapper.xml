@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.boot.extension.sms.mapper.SmsChannelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.boot.extension.sms.entity.SmsChannel">
+        <id column="id" property="id" />
+        <result column="channel_code" property="channelCode" />
+        <result column="channel_name" property="channelName" />
+        <result column="secret_id" property="secretId" />
+        <result column="secret_key" property="secretKey" />
+        <result column="region_id" property="regionId" />
+        <result column="channel_status" property="channelStatus" />
+        <result column="sms_quantity" property="smsQuantity" />
+        <result column="sms_validity" property="smsValidity" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_code, channel_name, secret_id, secret_key, region_id, channel_status, sms_quantity, sms_validity, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询短信渠道表列表 -->
+    <select id="querySmsChannelList" resultType="com.gitegg.boot.extension.sms.dto.SmsChannelDTO" parameterType="com.gitegg.boot.extension.sms.dto.QuerySmsChannelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_sms_channel
+        WHERE del_flag = 0
+        <if test="smsChannel.channelCode != null and smsChannel.channelCode != ''">
+            AND channel_code = #{smsChannel.channelCode}
+        </if>
+        <if test="smsChannel.channelName != null and smsChannel.channelName != ''">
+            AND channel_name = #{smsChannel.channelName}
+        </if>
+        <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="smsChannel.endDateTime != null and smsChannel.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsChannel.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询短信渠道表信息 -->
+    <select id="querySmsChannel" resultType="com.gitegg.boot.extension.sms.dto.SmsChannelDTO" parameterType="com.gitegg.boot.extension.sms.dto.QuerySmsChannelDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_sys_sms_channel
+        WHERE del_flag = 0
+        <if test="smsChannel.channelCode != null and smsChannel.channelCode != ''">
+            AND channel_code = #{smsChannel.channelCode}
+        </if>
+        <if test="smsChannel.channelName != null and smsChannel.channelName != ''">
+            AND channel_name = #{smsChannel.channelName}
+        </if>
+        <if test="smsChannel.beginDateTime != null and smsChannel.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{smsChannel.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="smsChannel.endDateTime != null and smsChannel.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{smsChannel.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+</mapper>

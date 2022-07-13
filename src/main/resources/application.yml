@@ -13,8 +13,3 @@ spring:
     multipart:
       max-file-size: 2048MB
       max-request-size: 2048MB
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: 'http://127.0.0.1/gitegg-oauth/oauth/public_key'

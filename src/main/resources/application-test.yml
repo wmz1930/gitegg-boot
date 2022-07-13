@@ -120,6 +120,30 @@ spring:
       nettyThreads: 0
       codec: !<org.redisson.codec.JsonJacksonCodec> {}
       "transportMode":"NIO"
+  thymeleaf:
+    cache: false
+  mail:
+    username: xxxxxxxxxxxx
+    password: xxxxxxxxx
+    default-encoding: UTF-8
+    host: smtp.mxhichina.com
+    port: 25
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: false
+  # 异步发送邮件，核心线程池数配置
+  mail-task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 5
+        keep-alive: 60
+      thread-name-prefix: mail-send-task-
 mybatis-plus:
   mapper-locations: classpath*:/com/gitegg/*/*/mapper/*Mapper.xml
   typeAliasesPackage: com.gitegg.*.*.entity

@@ -1,0 +1,13 @@
+### web
+server:
+  port: 8082
+#  servlet:
+#    context-path: /gitegg-monitor
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+  application:
+    name: '@artifactId@'
+  # 启动时不检查模板文件,避免报找不到模板文件夹警告
+  thymeleaf:
+    check-template-location: false

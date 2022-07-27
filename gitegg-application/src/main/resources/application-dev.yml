@@ -1,0 +1,397 @@
+#业务系统相关初始化参数
+system:
+  #登录密码默认最大尝试次数
+  maxTryTimes: 5
+  #不需要验证码登录的最大次数
+  maxNonCaptchaTimes: 2
+  #通用对称加密秘钥,生产环境请替换
+  secret-key: YJyZJ28mMum6JA3Y
+  #通用对称加密秘钥偏移,使用DES加密时，长度必须是8位，生产环境请替换
+  secret-key-salt: YOIYvR2Q
+  #注册用户默认密码
+  defaultPwd: 12345678
+  #如果使用默认密码，那么第一次登录强制修改密码
+  defaultPwdChangeFirst: true
+  #注册用户默认角色ID
+  defaultRoleId: 2
+  #注册用户默认组织机构ID
+  defaultOrgId: 1
+  #注册用户默认状态
+  defaultUserStatus: 1
+  #不需要数据权限过滤的角色key
+  noDataFilterRole: DATA_NO_FILTER
+  #第三方登录超时时间（秒）默认为3600秒
+  socialLoginExpiration: 3600
+  #第三方登录最大尝试次数，如果超过次数，那么需重新授权
+  socialLoginTryTimes: 5
+  #OAuth2公钥和密码
+  keyPair:
+    keyLocation: gitegg.jks
+    keyPassword: 123456
+    alias: gitegg
+resubmit-lock:
+  enabled: true
+xxl:
+  job:
+    enabled: false
+    admin:
+      addresses: http://127.0.0.1:8081/gitegg-job-admin
+    accessToken: 'default_token'
+    executor:
+      appname: ${spring.application.name}
+      address:
+      ip:
+      port: 9999
+      logpath: D:\\log4j2_nacos\\xxl-job\\jobhandler
+      logretentiondays: 30
+logging:
+  config: classpath:config/log4j2.xml
+  file:
+    # 配置日志的路径，包含 spring.application.name  Linux:  /var/log/${spring.application.name}
+    path: D:\\log4j2_nacos\\${spring.application.name}
+spring:
+  autoconfigure:
+    # 动态数据源排除默认配置
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    druid:
+      stat-view-servlet:
+        enabled: true
+        loginUsername: admin
+        loginPassword: 123456
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      # 设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      strict: false
+      # 开启seata代理，开启后默认每个数据源都代理，如果某个不需要代理可单独关闭
+      seata: false
+      #支持XA及AT模式,默认AT
+      seata-mode: AT
+      druid:
+        initialSize: 1
+        minIdle: 3
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 30000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: config,stat,slf4j
+        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
+        # 合并多个DruidDataSource的监控数据
+        useGlobalDataSourceStat: true
+        # 配置监控服务器
+        stat-view-servlet:
+          login-username: admin
+          login-password: 123456
+          reset-enable: false
+          url-pattern: /druid/*
+          # 添加IP白名单
+          #allow:
+          # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+          #deny:
+        web-stat-filter:
+          # 添加过滤规则
+          url-pattern: /*
+          # 忽略过滤格式
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      datasource:
+        master:
+          url: jdbc:mysql://127.0.0.1/gitegg_boot?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
+  redis:
+    database: 1
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    ssl: false
+    timeout: 2000
+  redisson:
+    config: |
+      singleServerConfig:
+        idleConnectionTimeout: 10000
+        connectTimeout: 10000
+        timeout: 3000
+        retryAttempts: 3
+        retryInterval: 1500
+        password: 123456
+        subscriptionsPerConnection: 5
+        clientName: null
+        address: "redis://127.0.0.1:6379"
+        subscriptionConnectionMinimumIdleSize: 1
+        subscriptionConnectionPoolSize: 50
+        connectionMinimumIdleSize: 32
+        connectionPoolSize: 64
+        database: 0
+        dnsMonitoringInterval: 5000
+      threads: 0
+      nettyThreads: 0
+      codec: !<org.redisson.codec.JsonJacksonCodec> {}
+      "transportMode":"NIO"
+  thymeleaf:
+    cache: false
+#  mail:
+#    tenant: true
+#    username: wanglei@hisc.com.cn
+#    password: "!QAZxsw2"
+#    default-encoding: UTF-8
+#    host: smtp.mxhichina.com
+#    port: 25
+#    protocol: smtp
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          ssl:
+#            enable: false
+  # 异步发送邮件，核心线程池数配置
+  mail-task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 5
+        keep-alive: 60
+      thread-name-prefix: mail-send-task-
+
+  ## spring boot admin
+  boot:
+    admin:
+      client:
+        # 如果需要健康检查，这里设置为ture
+        enabled: true
+        url: http://127.0.0.1:8082/monitor
+        # 服务端安全认证信息
+        username: user
+        password: password
+        instance:
+          prefer-ip: true
+          metadata:
+            # 客户端端点信息的安全认证信息
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+  # Basic认证信息，生产环境记得修改
+  security:
+    oauth2:
+      resource:
+        filter-order: 3
+    user:
+      name: user
+      password: password
+      roles: ACTUATOR_ADMIN
+# 性能监控端点配置
+management:
+  security:
+    enabled: true
+    role: ACTUATOR_ADMIN
+  endpoint:
+    health:
+      show-details: always
+#    metrics:
+#      enabled: true
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
+#  metrics:
+#    tags:
+#      application: ${spring.application.name}
+#    export:
+#      prometheus:
+#        enabled: true
+#        step: 1ms
+#        descriptions: true
+#  server:
+#    servlet:
+#      context-path: /actuator
+  health:
+    mail:
+      enabled: false
+mybatis-plus:
+  mapper-locations: classpath*:/com/gitegg/*/*/mapper/*Mapper.xml
+  typeAliasesPackage: com.gitegg.*.*.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 2
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 多租户配置
+tenant:
+  # 是否开启租户模式
+  enable: true
+  # 需要排除的多租户的表
+  exclusionTable:
+    - "t_sys_district"
+    - "t_sys_tenant"
+    - "t_sys_role"
+    - "t_sys_resource"
+    - "t_sys_role_resource"
+    - "oauth_client_details"
+  # 租户字段名称
+  column: tenant_id
+# 数据权限
+data-permission:
+  # 注解方式默认关闭，否则影响性能
+  annotation-enable: true
+#验证码配置
+captcha:
+  #验证码的类型 sliding: 滑动验证码 image: 图片验证码
+  type: sliding
+aj:
+  captcha:
+    #缓存local/redis...
+    cache-type: redis
+    #local缓存的阈值,达到这个值，清除缓存
+    #cache-number=1000
+    #local定时清除过期缓存(单位秒),设置为0代表不执行
+    #timing-clear=180
+    #验证码类型default两种都实例化。
+    type: default
+    #汉字统一使用Unicode,保证程序通过@value读取到是中文，在线转换 https://tool.chinaz.com/tools/unicode.aspx 中文转Unicode
+    #右下角水印文字(我的水印)
+    water-mark: GitEgg
+    #右下角水印字体(宋体)
+    water-font: 宋体
+    #点选文字验证码的文字字体(宋体)
+    font-type: 宋体
+    #校验滑动拼图允许误差偏移量(默认5像素)
+    slip-offset: 5
+    #aes加密坐标开启或者禁用(true|false)
+    aes-status: true
+    #滑动干扰项(0/1/2) 1.2.2版本新增
+    interference-options: 2
+    # 接口请求次数一分钟限制是否开启 true|false
+    req-frequency-limit-enable: true
+    # 验证失败5次，get接口锁定
+    req-get-lock-limit: 5
+    # 验证失败后，锁定时间间隔,s
+    req-get-lock-seconds: 360
+    # get接口一分钟内请求数限制
+    req-get-minute-limit: 30
+    # check接口一分钟内请求数限制
+    req-check-minute-limit: 60
+    # verify接口一分钟内请求数限制
+    req-verify-minute-limit: 60
+#SMS短信通用配置
+sms:
+  #手机号码正则表达式，为空则不做验证
+  reg:
+  #负载均衡类型 可选值: Random、RoundRobin、WeightRandom、WeightRoundRobin
+  load-balancer-type: Random
+  web:
+    #启用web端点
+    enable: true
+    #访问路径前缀
+    base-path: /commons/sms
+  verification-code:
+    code-key: code
+    #验证码长度
+    code-length: 6
+    #为true则验证失败后删除验证码
+    delete-by-verify-fail: false
+    #为true则验证成功后删除验证码
+    delete-by-verify-succeed: true
+    #重新发送验证码间隔时间，单位秒
+    retry-interval-time: 60
+    #验证码验证，前置验证重试次数
+    retry-verification-times: 3
+    #验证码有效期，单位秒
+    expiration-time: 180
+    #识别码长度
+    identification-code-length: 3
+    #是否启用识别码
+    use-identification-code: false
+  redis:
+    #验证码业务在保存到redis时的key的前缀
+    key-prefix: VerificationCode
+#justauth第三方登录设置
+justauth:
+  enabled: true
+  # 解决HttpUtil冲突问题。可选值：default、okhttp3、 apache、 hutool。选default时，走的是默认选择，首选java11的HttpClient。
+  http-util: hutool
+  type:
+    GITHUB:
+      client-id: 1111111111
+      client-secret: 22222222
+      redirect-uri: http://192.168.0.4:8000/social/github/callback
+      ignore-check-state: false
+  http-config:
+    timeout: 30000
+    # proxy:
+    #   GOOGLE:
+    #     type: HTTP
+    #     hostname: 127.0.0.1
+    #     port: 10080
+  cache:
+    type: Redis
+    prefix: 'GITEGG:JUSTAUTH:'
+    timeout: 1h
+knife4j:
+  basic:
+    enable: false #开启认证，开发环境不需要认证
+  # 开启增强配置
+  enable: false
+  # 开启生产环境屏蔽
+  production: true
+# 鉴权放行设置 1、whiteUrls不需要鉴权的公共url，白名单，配置白名单路径 2、authUrls需要鉴权的公共url
+oauth-list:
+  staticFiles:
+    - "/doc.html"
+    - "/**/api-docs"
+    - "/webjars/**"
+    - "/favicon.ico"
+    - "/swagger-resources/**"
+  whiteUrls:
+    -  "/druid/**"
+    - "/oauth/login/phone"
+    - "/oauth/login/qr"
+    - "/oauth/token"
+    - "/oauth/public_key"
+    - "/oauth/captcha/type"
+    - "/oauth/captcha"
+    - "/oauth/captcha/check"
+    - "/oauth/captcha/image"
+    - "/oauth/sms/captcha/send"
+    - "/extension/base/dict/list/{dictCode}"
+    - "/oauth/social/{type}/callback"
+    - "/oauth/social/login/{type}"
+    - "/oauth/social/bind/mobile"
+    - "/oauth/social/bind/account"
+    - "/extension/sms/code/send"
+    - "/extension/sms/check/code/pre"
+    - "/extension/sms/check/code"
+    - "/system/account/register/sms/send"
+    - "/system/account/register"
+    - "/system/account/register/check"
+  authUrls:
+    - "/oauth/logout"
+    - "/oauth/user/info"
+    - "/system/account/user/info"
+    - "/extension/base/upload/file"

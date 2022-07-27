@@ -1,0 +1,56 @@
+spring:
+  boot:
+    admin:
+      context-path: /monitor
+      url: http://127.0.0.1:8082
+      client:
+        # 如果需要健康检查，这里设置为ture
+        enabled: true
+        url: http://127.0.0.1:8082/monitor
+        # 服务端安全认证信息
+        username: user
+        password: password
+        instance:
+          prefer-ip: true
+          metadata:
+            # 客户端端点信息的安全认证信息
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+  security:
+    user:
+      name: user
+      password: password
+logging:
+  config: classpath:config/log4j2.xml
+  file:
+    # 配置日志的路径，包含 spring.application.name  Linux:  /var/log/${spring.application.name}
+    path: D:\\log4j2_nacos\\${spring.application.name}
+management:
+  security:
+    enabled: true
+    role: ACTUATOR_ADMIN
+  endpoint:
+    health:
+      show-details: always
+  #    metrics:
+  #      enabled: true
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
+  #  metrics:
+  #    tags:
+  #      application: ${spring.application.name}
+  #    export:
+  #      prometheus:
+  #        enabled: true
+  #        step: 1ms
+  #        descriptions: true
+  #  server:
+  #    servlet:
+  #      context-path: /actuator
+  health:
+    mail:
+      enabled: false

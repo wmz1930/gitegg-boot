@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  uri-encoding: utf-8
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+  application:
+    name: '@artifactId@'
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+  security:
+    oauth2:
+      resource:
+        filter-order: 3

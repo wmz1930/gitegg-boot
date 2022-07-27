@@ -6,28 +6,61 @@
 
     <groupId>com.gitegg.boot</groupId>
     <artifactId>gitegg-boot</artifactId>
-    <name>gitegg-boot</name>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.4.RELEASE</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>gitegg-application</module>
+        <module>gitegg-service</module>
+        <module>gitegg-generator</module>
+        <module>gitegg-schedule</module>
+        <module>gitegg-monitor</module>
+    </modules>
 
     <properties>
+        <start-class>com.gitegg.boot.GitEggBootApplication</start-class>
         <!-- jdk版本1.8 -->
         <java.version>1.8</java.version>
         <!-- maven-compiler-plugin插件版本，Java代码编译 -->
         <maven.plugin.version>3.8.1</maven.plugin.version>
         <!-- maven编译时指定编码UTF-8 -->
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <!-- jib-maven-plugin插件版本，代码打包docker -->
+        <jib.maven.plugin.version>3.1.4</jib.maven.plugin.version>
         <!-- 项目统一字符集编码UTF-8 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 项目统一字符集编码UTF-8 -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- GitEgg项目统一设置版本号 -->
-        <gitegg.project.version>1.0.3.RELEASE</gitegg.project.version>
+        <gitegg.project.version>1.0.4.RELEASE</gitegg.project.version>
         <!-- SpringBoot版本号 -->
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
-        <!-- hutool工具版本 -->
-        <hutool.version>5.5.1</hutool.version>
     </properties>
+
+    <dependencies>
+        <!-- Lombok 通过简单注解消除冗长代码  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- hutool Java常用工具包-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        <!-- spring-boot-admin监控 客户端 -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <!-- 去除springboot默认的logback配置-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -42,84 +75,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <!-- gitegg Spring Boot自定义及扩展 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-boot</artifactId>
-        </dependency>
-        <!-- gitegg-platform-oauth2 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-oauth2</artifactId>
-        </dependency>
-        <!-- gitegg数据库驱动及连接池 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-db</artifactId>
-        </dependency>
-        <!-- gitegg mybatis-plus -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-mybatis</artifactId>
-        </dependency>
-        <!-- gitegg扩展Mybatis Plus代码生成工具-->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-code-generator</artifactId>
-        </dependency>
-        <!-- gitegg 短信自定义扩展 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-sms-starter</artifactId>
-        </dependency>
-        <!-- gitegg 分布式存储自定义扩展 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-dfs-starter</artifactId>
-        </dependency>
-        <!-- 验证码 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-captcha</artifactId>
-        </dependency>
-        <!-- gitegg cache自定义扩展 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-        </dependency>
-        <!-- 第三方登录 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-justauth</artifactId>
-        </dependency>
-        <!-- 邮件 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-mail</artifactId>
-        </dependency>
-        <!-- 定时任务 -->
-        <dependency>
-            <groupId>com.gitegg.platform</groupId>
-            <artifactId>gitegg-platform-xxl-job</artifactId>
-        </dependency>
-        <!-- Lombok 通过简单注解消除冗长代码  -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <!-- hutool Java常用工具包-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <finalName>${project.name}</finalName>
         <resources>
@@ -129,6 +84,7 @@
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>**/*.jks</exclude>
+                    <exclude>static/**</exclude>
                 </excludes>
             </resource>
             <!-- 解决jks被过滤掉的问题 -->
@@ -137,6 +93,7 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>**/*.jks</include>
+                    <include>static/**</include>
                 </includes>
             </resource>
             <resource>
@@ -274,4 +231,5 @@
             </properties>
         </profile>
     </profiles>
+
 </project>

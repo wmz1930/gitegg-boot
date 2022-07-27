@@ -24,3 +24,13 @@ hs_err_pid*
 /target
 /.idea
 /gitegg-boot.iml
+/gitegg-service/gitegg-service.iml
+/gitegg-service/target
+/gitegg-schedule/target
+/gitegg-schedule/gitegg-schedule.iml
+/gitegg-monitor/gitegg-monitor.iml
+/gitegg-monitor/target
+/gitegg-generator/gitegg-generator.iml
+/gitegg-generator/target
+/gitegg-application/gitegg-application.iml
+/gitegg-application/target

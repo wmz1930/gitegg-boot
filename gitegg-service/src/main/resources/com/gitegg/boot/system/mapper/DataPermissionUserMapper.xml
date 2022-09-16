@@ -72,7 +72,7 @@
         sysUser.avatar AS avatar,
         sysUser.country AS country,
         sysUser.province AS province,
-        provinceDistrict.name AS provinceName,
+        province.district_name AS provinceName,
         sysUser.city AS city,
         cityDistrict.name AS cityName,
         sysUser.area AS area,

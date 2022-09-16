@@ -29,8 +29,8 @@ public class District implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @TableField("name")
-    private String name;
+    @TableField("district_name")
+    private String districtName;
 
     @TableField("parent_id")
     private Integer parentId;
@@ -50,8 +50,8 @@ public class District implements Serializable {
     @TableField("code")
     private String code;
 
-    @TableField("order")
-    private Integer order;
+    @TableField("district_order")
+    private Integer districtOrder;
 
     @TableField(exist = false)
     private List<District> children = new ArrayList<>();

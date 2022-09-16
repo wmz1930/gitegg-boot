@@ -1,5 +1,6 @@
 package com.gitegg.boot;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author GitEgg
  */
 @ComponentScan(basePackages = "com.gitegg")
+@MapperScan(basePackages  = {"com.gitegg.**.mapper.**"})
 @SpringBootApplication
 public class GitEggBootApplication {
 

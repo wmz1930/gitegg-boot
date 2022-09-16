@@ -2,6 +2,7 @@ package com.gitegg.boot.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gitegg.boot.system.dto.CreateOrganizationDTO;
+import com.gitegg.boot.system.dto.QueryOrganizationDTO;
 import com.gitegg.boot.system.dto.UpdateOrganizationDTO;
 import com.gitegg.boot.system.entity.Organization;
 import com.gitegg.boot.system.service.IOrganizationService;
@@ -41,14 +42,28 @@ public class OrganizationController {
     /**
      * 查询组织树
      * 
-     * @param parentId
+     * @param organizationDTO
      * @return
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询组织机构树", notes = "树状展示组织机构信息")
-    @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Integer.class)
-    public Result<List<Organization>> queryOrganizationTree(Long parentId) {
-        List<Organization> treeList = organizationService.queryOrganizationByParentId(parentId);
+    public Result<List<Organization>> queryOrganizationTree(QueryOrganizationDTO organizationDTO) {
+        Organization organization = BeanCopierUtils.copyByClass(organizationDTO, Organization.class);
+        List<Organization> treeList = organizationService.queryOrganizationByParentId(organization);
+        return Result.data(treeList);
+    }
+
+    /**
+     * 级联查询
+     *
+     * @param organizationDTO
+     * @return
+     */
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "查询组织机构树", notes = "树状展示组织机构信息")
+    public Result<List<Organization>> queryOrganizationList(QueryOrganizationDTO organizationDTO) {
+        Organization organization = BeanCopierUtils.copyByClass(organizationDTO, Organization.class);
+        List<Organization> treeList = organizationService.queryOrganizationList(organization);
         return Result.data(treeList);
     }
 

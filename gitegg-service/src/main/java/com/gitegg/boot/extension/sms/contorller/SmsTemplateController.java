@@ -245,6 +245,6 @@ public class SmsTemplateController {
         String fileName = URLEncoder.encode("短信模板配置表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "短信模板配置表数据列表";
-        EasyExcel.write(response.getOutputStream(), SmsTemplateImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), SmsTemplateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

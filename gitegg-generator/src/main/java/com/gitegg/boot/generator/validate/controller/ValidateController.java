@@ -258,6 +258,6 @@ public class ValidateController {
         String fileName = URLEncoder.encode("字段校验规则配置表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "字段校验规则配置表数据列表";
-        EasyExcel.write(response.getOutputStream(), ValidateImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), ValidateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

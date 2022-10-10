@@ -47,7 +47,7 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
     private IRoleService roleService;
 
     @Autowired
-    public void setFieldService(@Lazy IRoleService roleService) {
+    public void setRoleService(@Lazy IRoleService roleService) {
         this.roleService = roleService;
     }
 

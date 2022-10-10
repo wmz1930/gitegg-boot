@@ -193,7 +193,7 @@ public class MailChannelController {
     @PostMapping("/upload")
     @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
-    List<MailChannelImport> mailChannelImportList =  EasyExcel.read(file.getInputStream(), MailChannelImport.class, null).sheet().doReadSync();
+        List<MailChannelImport> mailChannelImportList =  EasyExcel.read(file.getInputStream(), MailChannelImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(mailChannelImportList))
         {
             List<MailChannel> mailChannelList = new ArrayList<>();
@@ -219,6 +219,6 @@ public class MailChannelController {
         String fileName = URLEncoder.encode("邮件渠道表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件渠道表数据列表";
-        EasyExcel.write(response.getOutputStream(), MailChannelImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailChannelImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

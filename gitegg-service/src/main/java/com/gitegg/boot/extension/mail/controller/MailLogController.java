@@ -193,6 +193,6 @@ public class MailLogController {
         String fileName = URLEncoder.encode("邮件记录数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件记录数据列表";
-        EasyExcel.write(response.getOutputStream(), MailLogImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailLogImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

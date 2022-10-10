@@ -179,7 +179,7 @@ public class DatasourceController {
         String fileName = URLEncoder.encode("数据源导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "数据源列表";
-        EasyExcel.write(response.getOutputStream(), DatasourceImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), DatasourceImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
 
     /**

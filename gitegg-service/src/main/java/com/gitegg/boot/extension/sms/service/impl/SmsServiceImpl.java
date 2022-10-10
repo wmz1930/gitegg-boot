@@ -2,7 +2,6 @@ package com.gitegg.boot.extension.sms.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.excel.util.CollectionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitegg.boot.extension.sms.props.SmsProperties;
 import com.gitegg.platform.base.constant.GitEggConstant;
@@ -23,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;

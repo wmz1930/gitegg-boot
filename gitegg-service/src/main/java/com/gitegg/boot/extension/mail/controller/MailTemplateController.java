@@ -232,6 +232,6 @@ public class MailTemplateController {
         String fileName = URLEncoder.encode("邮件模板数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件模板数据列表";
-        EasyExcel.write(response.getOutputStream(), MailTemplateImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), MailTemplateImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

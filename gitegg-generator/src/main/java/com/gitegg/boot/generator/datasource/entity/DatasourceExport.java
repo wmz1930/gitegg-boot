@@ -5,7 +5,7 @@ import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.annotation.write.style.HeadRowHeight;
-import com.gitegg.platform.boot.excel.LocalDateTimeConverter;
+import com.alibaba.excel.converters.localdatetime.LocalDateTimeStringConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -67,7 +67,7 @@ public class DatasourceExport {
     private String comments;
 
     @ApiModelProperty(value = "创建日期")
-    @ExcelProperty(value = "创建日期" ,index = 8, converter = LocalDateTimeConverter.class)
+    @ExcelProperty(value = "创建日期" ,index = 8, converter = LocalDateTimeStringConverter.class)
     @ColumnWidth(22)
     @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

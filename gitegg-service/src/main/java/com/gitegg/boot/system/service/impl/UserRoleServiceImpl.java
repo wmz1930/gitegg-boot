@@ -29,9 +29,9 @@ import java.util.List;
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
 
     private IRoleService roleService;
-    
+
     @Autowired
-    public void setFieldService(@Lazy IRoleService roleService) {
+    public void setRoleService(@Lazy IRoleService roleService) {
         this.roleService = roleService;
     }
 

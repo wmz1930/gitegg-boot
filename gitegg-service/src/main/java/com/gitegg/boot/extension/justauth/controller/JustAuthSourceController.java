@@ -219,6 +219,6 @@ public class JustAuthSourceController {
         String fileName = URLEncoder.encode("租户第三方登录信息配置表数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "租户第三方登录信息配置表数据列表";
-        EasyExcel.write(response.getOutputStream(), JustAuthSourceImport.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), JustAuthSourceImport.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
  }

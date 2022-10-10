@@ -12,14 +12,14 @@
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "TEXTAREA">
               <a-textarea
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="请输入${field.comment}"
                 :auto-size="{ minRows: 3, maxRows: 5 }"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "INPUT_NUMBER">
               <a-input-number
@@ -27,7 +27,7 @@
                 placeholder="${field.comment}"
                 :min="${field.min}"
                 :max="${field.max}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI" || field.controlType == "RADIO" || field.controlType == "SWITCH" || field.controlType == "CHECKBOX">
 <#assign dictSelect=true/>
@@ -41,9 +41,10 @@
               <a-select v-model.trim="list${entity}Query.${field.entityName}"
                         placeholder="${field.comment}"
                         show-search
+			allow-clear
                         <@Multiple controlType="${field.controlType}"/>
                         :filter-option="filterOption"
-                        @keyup.enter.native="handleFilter" >
+                        @keyup.enter.native="searchTreeData" >
                 <a-select-option :key="item.id + index"
                                  v-for="(item,index) in ${field.entityName}Dict.dictList"
                                  :label="item.dictName"
@@ -75,7 +76,7 @@
                           :options="provinceOptions"
                           placeholder="输选择${field.comment}"
                           style="width:100%;"
-                          @keyup.enter.native="handleFilter" />
+                          @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "OrganizationTreeSelect">
 <#assign organizationTree=true/>
@@ -83,7 +84,7 @@
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="${field.comment}"
                 :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "RoleSelect">
 <#assign roleTree=true/>
@@ -91,7 +92,7 @@
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="${field.comment}"
                 :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "ResourceTreeSelect">
 <#assign resourceTree=true/>
@@ -99,7 +100,7 @@
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="${field.comment}"
                 :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "MenuTreeSelect">
 <#assign menuTree=true/>
@@ -107,12 +108,12 @@
                 v-model.trim="list${entity}Query.${field.entityName}"
                 placeholder="${field.comment}"
                 :max-length="${field.maxLength}"
-                @keyup.enter.native="handleFilter" />
+                @keyup.enter.native="searchTreeData" />
 </#if>
 <#if field.controlType == "RATE">
               <a-rate v-model.trim="list${entity}Query.${field.entityName}"
                       placeholder="${field.comment}"
-                      @keyup.enter.native="handleFilter"/>
+                      @keyup.enter.native="searchTreeData"/>
 </#if>
             </a-form-model-item>
           </a-col>
@@ -138,7 +139,7 @@
           </template>
           <a-col :md="!advanced && 6 || 24" :sm="24">
             <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary" @click="handleFilter">查询</a-button>
+              <a-button type="primary" @click="searchTreeData">查询</a-button>
               <a-button style="margin-left: 8px" @click="reset${entity}Query">重置</a-button>
               <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
@@ -152,14 +153,6 @@
 
     <div class="table-operator">
       <a-button type="primary" icon="plus" @click="handleCreate">新建</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="handleBatchDelete"><a-icon type="delete" />删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
 <#if config.exportFlag == true>
       <a-button type="primary" icon="cloud-download" @click="handleDownload" style="margin-left: 8px;">导出</a-button>
 </#if>
@@ -182,17 +175,14 @@
          <#assign statusName=field.entityName/>
      </#if>
  </#list>
-    <s-table
+    <a-table
       ref="${table.entityPath}Table"
       size="default"
       bordered
       :rowKey="row=>row.id"
       :columns="columns"
-      :data="loadData"
+      :data-source="list"
       :scroll="{x:1500}"
-      showPagination="auto"
-      :pagination="${table.entityPath}Pagination"
-      :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
 <#-- ----------  所有的字典类型 设置Filter  ---------->
 <#list dictCodeFields as field>
@@ -207,6 +197,8 @@
         <span>{{ record.createTime | moment }}</span>
       </span>
       <span slot="action" slot-scope="text, record">
+        <a @click="handleCreate(record)">新增</a>
+        <a-divider type="vertical" />
         <a @click="handleUpdate(record)">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
@@ -228,8 +220,7 @@
           </a-menu>
         </a-dropdown>
       </span>
-    </s-table>
-
+    </a-table>
     <#if config.formType = "modal">
     <a-modal :title="textMap[dialogStatus]"
              :maskClosable="false"
@@ -254,12 +245,21 @@
         :label-col="${table.entityPath}LabelCol"
         :wrapper-col="${table.entityPath}WrapperCol">
 <#-- ----------  BEGIN 字段循环遍历  ---------->
+
 <#list formFields as field>
 <#if (field_index + 1)%2 != 0>
         <a-row>
 </#if>
           <a-col :md="${config.formItemCol}" :sm="24">
             <a-form-model-item label="${field.comment}" prop="${field.entityName}">
+<#if field.controlType == "PARENT_ID">
+              <a-cascader :options="${table.entityPath}List"
+                v-model="selected${entity}Options"
+                :field-names="props${entity}"
+                :show-search="{ filter }"
+                change-on-select
+                placeholder="请选择上级" />
+</#if>
 <#if field.controlType == "INPUT_TEXT">
               <a-input
                 v-model.trim="${table.entityPath}Form.${field.entityName}"
@@ -432,14 +432,13 @@
    </#if>
 </#list>
 <script>
-    import { STable } from '@/components'
     <#if uploadFile?? && uploadFile == true>
     import UploadFile from '@/components/Upload/UploadFile'
     </#if>
     <#if uploadImg?? && uploadImg == true>
     import UploadImage from '@/components/Upload/UploadImage'
     </#if>
-    import { query${entity}List, create${entity}, update${entity}, <#if hasStatus?? && hasStatus == true>update${entity}Status, </#if>delete${entity}<#if checkExist?? && checkExist == true>, check${entity}Exist</#if><#if config.exportFlag == true>, batchDelete${entity}, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api/${vueJsPath}'
+    import { query${entity}Tree, create${entity}, update${entity}, <#if hasStatus?? && hasStatus == true>update${entity}Status, </#if>delete${entity}<#if checkExist?? && checkExist == true>, check${entity}Exist</#if><#if config.exportFlag == true>, download${entity}List</#if><#if config.importFlag == true>, upload${entity}, download${entity}Template</#if> } from '@/api/${vueJsPath}'
     import moment from 'moment'
     <#if provinceSelect?? && provinceSelect == true>
     import Data from '@/api/pcaa'
@@ -451,9 +450,10 @@
     import { batchListDictBusiness } from '@/api/system/base/dictBusiness'
     let vm = {}
     </#if>
+
     export default {
-        name: '${entity}Table',
-        components: { moment, STable<#if uploadFile?? && uploadFile == true>, UploadFile</#if><#if uploadImg?? && uploadImg == true>, UploadImage</#if> },
+        name: '${entity}TreeTable',
+        components: { moment<#if uploadFile?? && uploadFile == true>, UploadFile</#if><#if uploadImg?? && uploadImg == true>, UploadImage</#if> },
         filters: {
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
             <#list dictCodeFields as field>
@@ -494,15 +494,37 @@
             <#------------  END 字段循环遍历  ---------->
             </#if>
             return {
+                ${table.entityPath}LabelCol: {
+                    xs: { span: 24 },
+                    sm: { span: 5 }
+                },
+                ${table.entityPath}WrapperCol: {
+                    xs: { span: 24 },
+                    sm: { span: 16 }
+                },
                 advanced: false,
-                current${entity}: '',
-                filterText: '',
-                <#if provinceSelect?? && provinceSelect == true>
+                expandAll: false,
+                    <#if provinceSelect?? && provinceSelect == true>
                 provinceOptions: null,
                 </#if>
-                tableKey: 0,
-                list: null,
-                total: 0,
+                props${entity}: {
+                    children: 'children',
+                    value: 'id',
+                    label: '${table.entityPath}Name'
+                },
+                list: [],
+                baseList: [],
+                ${table.entityPath}List: [],
+                rootFlag: false,
+                selected${entity}Options: [],
+                expandTitle: '${table.entityPath}Table.${table.entityPath}Name',
+                expandName: '${table.entityPath}Name',
+                dialogFormVisible: false,
+                dialogStatus: '',
+                textMap: {
+                    update: '编辑',
+                    create: '添加'
+                },
                 listLoading: true,
                 list${entity}Query: {
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
@@ -526,16 +548,11 @@
                 </#if>
                 </#list>
                 <#------------  END 所有的字典类型 字段循环遍历  ---------->
-                dialogFormVisible: false,
-                dialogStatus: '',
-                textMap: {
-                    update: '编辑',
-                    create: '添加'
-                },
                 ${table.entityPath}Form: {
                     <#list formFields as field>
-                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if><#if field?? && field?has_next>,</#if>
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if>,
                     </#list>
+                        children: [] // 必须加，否则新增的节点不显示
                 },
                 // 表头
                 columns: [
@@ -547,9 +564,9 @@
                         align: 'center',
                         width: 200,
                         ellipsis: true,
-<#if field?? && field.dictCode !?length gt 0>
+                    <#if field?? && field.dictCode !?length gt 0>
                         scopedSlots: { customRender: '${field.entityName}Slot' },
-</#if>
+                     </#if>
                         dataIndex: '${field.entityName}'
                     },
                     </#if>
@@ -590,30 +607,8 @@
                     <#------------  END 字段循环遍历  ---------->
                 },
                 downloadLoading: false,
-                ${table.entityPath}LabelCol: {
-                    xs: { span: 24 },
-                    sm: { span: 5 }
-                },
-                ${table.entityPath}WrapperCol: {
-                    xs: { span: 24 },
-                    sm: { span: 16 }
-                },
-                selectedRowKeys: [],
-                selectedRows: [],
-                ${table.entityPath}Pagination: {
-                    defaultPageSize: 10,
-                    showQuickJumper: true,
-                    defaultCurrent: 1,
-                    showTotal: (total, range) => `共 <#noparse>${total}</#noparse> 条`
-                },
-                // 加载数据方法 必须为 Promise 对象
-                loadData: parameter => {
-                    return function () {}
-                }
+                args: [null, null, null]
             }
-        },
-        watch: {
-
         },
         created () {
              const that = this
@@ -631,28 +626,14 @@
                         dict.filterMap[item.dictCode] = item.dictName
                     })
                 })
-                that.loadData = function (parameter) {
-                    return query${entity}List(Object.assign(parameter, that.list${entity}Query))
-                        .then(res => {
-                            that.list = res.data
-                            return res
-                        })
-                }
-                that.$nextTick(() => {
-                    that.handleFilter()
+		that.$nextTick(() => {
+                    that.getList()
                 })
             })
-            <#else>
-                that.loadData = function (parameter) {
-                    return query${entity}List(Object.assign(parameter, that.list${entity}Query))
-                        .then(res => {
-                            that.list = res.data
-                            return res
-                        })
-                }
-                that.$nextTick(() => {
-                    that.handleFilter()
-                })
+	    <#else>
+            that.$nextTick(() => {
+                that.getList()
+            })
             </#if>
             <#if provinceSelect?? && provinceSelect == true>
                 that.getAreaList()
@@ -710,68 +691,101 @@
                 <#-- ----------  BEGIN 字段循环遍历  ---------->
                 this.${table.entityPath}Form = {
                 <#list formFields as field>
-                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if><#if field?has_next>,</#if> // ${field.comment}
+                    ${field.entityName}: <#if field.defaultValue?? && field.defaultValue != "">'${field.defaultValue}'<#else>undefined</#if>, // ${field.comment}
                 </#list>
+                    children: [] // 必须加，否则新增的节点不显示
                 <#------------  END 字段循环遍历  ---------->
                 }
+                    this.selected${entity}Options = []
+                var ${table.entityPath}ListStr = JSON.stringify(this.list)
+                this.${table.entityPath}List = JSON.parse(${table.entityPath}ListStr.replace(/"isLeaf":1/g, '"isLeaf":true').replace(/"isLeaf":0/g, '"isLeaf":false')) // 数组深复制
             },
-            onSelectChange (selectedRowKeys, selectedRows) {
-                this.selectedRowKeys = selectedRowKeys
-                this.selectedRows = selectedRows
-            },
-            toggleAdvanced () {
+	    toggleAdvanced () {
                 this.advanced = !this.advanced
             },
             getList () {
                 this.listLoading = true
-                query${entity}List(this.list${entity}Query).then(response => {
+                query${entity}Tree(this.list${entity}Query).then(response => {
                     this.list = response.data
-                    this.total = response.count
+                    this.baseList = JSON.parse(JSON.stringify(response.data)) // 数组深复制
                     this.listLoading = false
                 })
             },
-            handleFilter () {
-                this.$refs.${table.entityPath}Table.refresh(true)
-            },
-            handleTableRefresh () {
-                this.$refs.${table.entityPath}Table.refresh()
-            },
-            handleCreate () {
+            handleCreate (row) {
                 this.reset${entity}Form()
+                if (row) {
+                    this.rootFlag = false
+                    this.${table.entityPath}Form.parentId = row.id
+                    if (this.${table.entityPath}Form.parentId && this.${table.entityPath}Form.parentId !== '0') {
+                        var ${table.entityPath}Str = this.select${entity}ListByLastId(this.${table.entityPath}List, this.${table.entityPath}Form.parentId) + ''
+                        this.selected${entity}Options = ${table.entityPath}Str.split(',')
+                    }
+                } else {
+                    this.rootFlag = true
+                }
                 this.dialogStatus = 'create'
                 this.dialogFormVisible = true
-                this.$nextTick(() => {
-                    this.$refs['${table.entityPath}Form'].clearValidate()
-                })
+                if (this.$refs['${table.entityPath}Form']) {
+                    this.$nextTick(() => {
+                        this.$refs['${table.entityPath}Form'].clearValidate()
+                    })
+                }
             },
             createData () {
+                if (this.selected${entity}Options.length > 0) {
+                    this.${table.entityPath}Form.parentId = this.selected${entity}Options[this.selected${entity}Options.length - 1]
+                } else {
+                    this.${table.entityPath}Form.parentId = '0'
+                }
                 this.$refs['${table.entityPath}Form'].validate(valid => {
                     if (valid) {
-                        create${entity}(this.${table.entityPath}Form).then(() => {
+                        create${entity}(this.${table.entityPath}Form).then(response => {
                             this.dialogFormVisible = false
-                            this.handleFilter()
+                            this.getList()
                             this.$message.success('创建成功')
                         })
                     }
                 })
             },
             handleUpdate (row) {
+                this.reset${entity}Form()
                 this.${table.entityPath}Form = Object.assign({}, row) // copy obj
-                this.dialogStatus = 'update'
-                <#if hasStatus?? && hasStatus == true>
-                this.${table.entityPath}Form.${statusName} = row.${statusName} + ''
+                    <#if provinceSelect?? && provinceSelect == true>
+                if (!this.${table.entityPath}Form.areas || this.${table.entityPath}Form.areas.length === 0) {
+                    this.${table.entityPath}Form.areas = [
+                        this.${table.entityPath}Form.province,
+                        this.${table.entityPath}Form.city,
+                        this.${table.entityPath}Form.area
+                    ]
+                }
                 </#if>
+
+                if (this.${table.entityPath}Form.parentId && this.${table.entityPath}Form.parentId !== '0') {
+                    var ${table.entityPath}Str = this.select${entity}ListByLastId(this.${table.entityPath}List, this.${table.entityPath}Form.parentId) + ''
+                    this.selected${entity}Options = ${table.entityPath}Str.split(',')
+                }
+                this.disabled${entity}ById(this.${table.entityPath}List, this.${table.entityPath}Form.id)
+
+                // JSON不接受循环对象——引用它们自己的对象
+                delete this.${table.entityPath}Form.parent
+                delete this.${table.entityPath}Form.children
+                this.dialogStatus = 'update'
                 this.dialogFormVisible = true
-                this.$nextTick(() => {
+                if (this.$refs['${table.entityPath}Form']) {
                     this.$refs['${table.entityPath}Form'].clearValidate()
-                })
+                }
             },
             updateData () {
+                if (this.selected${entity}Options.length > 0) {
+                    this.${table.entityPath}Form.parentId = this.selected${entity}Options[this.selected${entity}Options.length - 1]
+                } else {
+                    this.${table.entityPath}Form.parentId = '0'
+                }
                 this.$refs['${table.entityPath}Form'].validate(valid => {
                     if (valid) {
                         update${entity}(this.${table.entityPath}Form).then(() => {
-                            this.handleTableRefresh()
                             this.dialogFormVisible = false
+                            this.getList()
                             this.$message.success('更新成功')
                         })
                     }
@@ -780,14 +794,14 @@
             handleDelete (row) {
                 var that = this
                 this.$confirm({
-                    title: '此操作将永久删除该记录，是否继续?',
+                    title: '此操作将永久删除该记录, 是否继续?',
                     content: '',
                     onOk () {
                         that.listLoading = true
                         delete${entity}(row.id).then(() => {
                             that.listLoading = false
+                            that.getList()
                             that.$message.success('删除成功!')
-                            that.handleTableRefresh()
                         })
                     },
                     onCancel () {
@@ -795,29 +809,124 @@
                     }
                 })
             },
-            handleBatchDelete () {
-                // 这里可以设置需要提示的信息，可以将id换为其他内容
-                var ${table.entityPath}List = this.selectedRows.map(function (n) {
-                    return n.id
-                })
-                var that = this
-                this.$confirm({
-                    title: '以下选中记录将被全部删除，是否继续?',
-                    content: ${table.entityPath}List.join(','),
-                    onOk () {
-                        that.listLoading = true
-                        batchDelete${entity}(that.selectedRowKeys).then(() => {
-                            that.listLoading = false
-                            that.$message.success('删除成功!')
-                            that.selectedRowKeys = []
-                            that.selectedRows = []
-                            that.handleTableRefresh()
-                        })
-                    },
-                    onCancel () {
-                        that.$message.info('已取消删除')
+            searchTreeData () {
+                this.list = JSON.parse(JSON.stringify(this.baseList))
+                if ((this.list${entity}Query.${table.entityPath}Name && this.list${entity}Query.${table.entityPath}Name !== '') || (this.list${entity}Query.${table.entityPath}Key && this.list${entity}Query.${table.entityPath}Key !== '' )) {
+                    this.queryData(this.list)
+                }
+                this.expandAll = true
+            },
+            select${entity}ListByLastId (${table.entityPath}List, lastId) {
+                // 递归查询上级，用于展示已选中的记录
+                var ${table.entityPath}Str = ''
+                if (${table.entityPath}List) {
+                    for (var ${table.entityPath} of ${table.entityPath}List) {
+                        // a-tree的isLeaf必须为boolean类型，这里需要转换一下
+                        if (${table.entityPath}.isLeaf === 1) {
+                            ${table.entityPath}.isLeaf = true
+                        } else {
+                            ${table.entityPath}.isLeaf = false
+                        }
+                        if (lastId === ${table.entityPath}.id) {
+                            return lastId
+                        } else if (${table.entityPath}.children) {
+                            var child${entity} = this.select${entity}ListByLastId(${table.entityPath}.children, lastId)
+                            if (child${entity}) {
+                                ${table.entityPath}Str = ${table.entityPath}.id + ',' + child${entity}
+                                return ${table.entityPath}Str
+                            }
+                        }
                     }
-                })
+                }
+                return ${table.entityPath}Str
+            },
+            disabled${entity}ById (${table.entityPath}List, id) {
+                // 递归查询机构父机构，用于展示已选中的机构
+                if (${table.entityPath}List && ${table.entityPath}List.length > 0) {
+                    for (var ${table.entityPath} of ${table.entityPath}List) {
+                        if (id === ${table.entityPath}.id) {
+                            ${table.entityPath}.disabled = true
+                        } else if (${table.entityPath}.children) {
+                            this.disabled${entity}ById(${table.entityPath}.children, id)
+                        }
+                    }
+                }
+            },
+            queryData (dataList) {
+                var haveFlag = false
+                var len = dataList.length - 1
+                if (len < 0) {
+                    return haveFlag
+                }
+                var haveFlagArray = new Array(dataList.length)
+                for (let i = len; i >= 0; i--) {
+                    var isname = this.list${entity}Query.${table.entityPath}Name && this.list${entity}Query.${table.entityPath}Name !== ''
+                    var hasname =
+                        dataList[i].${table.entityPath}Name.indexOf(
+                            this.list${entity}Query.${table.entityPath}Name
+                        ) >= 0
+                    var iskey = this.list${entity}Query.${table.entityPath}Key && this.list${entity}Query.${table.entityPath}Key !== ''
+                    var haskey =
+                        dataList[i].${table.entityPath}Key.indexOf(this.list${entity}Query.${table.entityPath}Key) >= 0
+
+                    if (isname && !iskey) {
+                        if (hasname) {
+                            haveFlagArray[i] = true
+                        } else if (
+                            !(dataList[i].children && dataList[i].children.length > 0)
+                        ) {
+                            var index1 = dataList.indexOf(dataList[i])
+                            dataList.splice(index1, 1)
+                            continue
+                        } else {
+                            haveFlagArray[i] = false
+                        }
+                    } else if (!isname && iskey) {
+                        if (haskey) {
+                            haveFlagArray[i] = true
+                        } else if (
+                            !(dataList[i].children && dataList[i].children.length > 0)
+                        ) {
+                            var index2 = dataList.indexOf(dataList[i])
+                            dataList.splice(index2, 1)
+                            continue
+                        } else {
+                            haveFlagArray[i] = false
+                        }
+                    } else if (isname && iskey) {
+                        if (hasname && haskey) {
+                            haveFlagArray[i] = true
+                        } else if (
+                            !(dataList[i].children && dataList[i].children.length > 0)
+                        ) {
+                            var index3 = dataList.indexOf(dataList[i])
+                            dataList.splice(index3, 1)
+                            continue
+                        } else {
+                            haveFlagArray[i] = false
+                        }
+                    }
+
+                    if (
+                        dataList[i] &&
+                        dataList[i].children &&
+                        dataList[i].children.length > 0
+                    ) {
+                        var childHaveFlag = this.queryData(dataList[i].children)
+                        if (!childHaveFlag && !haveFlagArray[i]) {
+                            var index4 = dataList.indexOf(dataList[i])
+                            dataList.splice(index4, 1)
+                        }
+                        if (childHaveFlag) {
+                            haveFlagArray[i] = true
+                        }
+                    }
+                }
+
+                if (haveFlagArray.indexOf(true) >= 0) {
+                    haveFlag = true
+                }
+                return haveFlag
             },
             <#if hasStatus?? && hasStatus == true>
             handleModifyStatus (row, status) {
@@ -851,7 +960,7 @@
                 upload${entity}(formData).then(() => {
                     this.uploading = false
                     this.$message.success('${table.comment!}数据导入成功')
-                    this.handleFilter()
+                    this.getList()
                 }).catch(err => {
                     console.log('uploading', err)
                     this.$message.error('${table.comment!}数据导入失败')
@@ -865,10 +974,8 @@
                 })
             },
             </#if>
-            filterOption (input, option) {
-              return (
-                      option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )
+            filterOption (inputValue, path) {
+                return path.some(option => option.${table.entityPath}Name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
             }
         }
     }

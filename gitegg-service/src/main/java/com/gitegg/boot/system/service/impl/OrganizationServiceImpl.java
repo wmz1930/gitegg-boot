@@ -77,7 +77,6 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Override
     public List<Organization> queryOrganizationList(Organization organization) {
-        List<Organization> orgList;
         try {
             if (null == organization.getParentId()) {
                 organization.setParentId(GitEggConstant.PARENT_ID);

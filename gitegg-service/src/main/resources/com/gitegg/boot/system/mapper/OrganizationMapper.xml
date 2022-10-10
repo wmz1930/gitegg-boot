@@ -88,6 +88,9 @@
         <if test="org.organizationLevel != null and org.organizationLevel != ''">
             AND organization_level = #{org.organizationLevel}
         </if>
+        <if test="org.parentId != null">
+            AND parent_id = #{org.parentId}
+        </if>
         ORDER BY id desc
     </select>
 

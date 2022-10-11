@@ -107,7 +107,7 @@ public class MailLogController {
     */
     @PostMapping("/delete/{mailLogId}")
     @ApiOperation(value = "删除邮件记录")
-    @ApiImplicitParam(paramType = "path", name = "mailLogId", value = "邮件记录ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "mailLogId", value = "邮件记录ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("mailLogId") Long mailLogId) {
         if (null == mailLogId) {
             return Result.error("ID不能为空");
@@ -124,7 +124,7 @@ public class MailLogController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除邮件记录")
-    @ApiImplicitParam(name = "mailLogIds", value = "邮件记录ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "mailLogIds", value = "邮件记录ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> mailLogIds) {
         if (CollectionUtils.isEmpty(mailLogIds)) {
             return Result.error("邮件记录ID列表不能为空");

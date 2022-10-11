@@ -97,7 +97,7 @@ public class JustAuthSocialUserController {
     */
     @PostMapping("/delete/{justAuthSocialUserId}")
     @ApiOperation(value = "删除第三方用户绑定")
-    @ApiImplicitParam(paramType = "path", name = "justAuthSocialUserId", value = "第三方用户绑定ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "justAuthSocialUserId", value = "第三方用户绑定ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("justAuthSocialUserId") Long justAuthSocialUserId) {
         if (null == justAuthSocialUserId) {
             return Result.error("ID不能为空");
@@ -114,7 +114,7 @@ public class JustAuthSocialUserController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除第三方用户绑定")
-    @ApiImplicitParam(name = "justAuthSocialUserIds", value = "第三方用户绑定ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "justAuthSocialUserIds", value = "第三方用户绑定ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> justAuthSocialUserIds) {
         if (CollectionUtils.isEmpty(justAuthSocialUserIds)) {
             return Result.error("第三方用户绑定ID列表不能为空");

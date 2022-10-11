@@ -143,7 +143,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/delete/{${table.entityPath}Id}")
     @ApiOperation(value = "删除${table.comment!}")
-    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("${table.entityPath}Id") Long ${table.entityPath}Id) {
         if (null == ${table.entityPath}Id) {
             return Result.error("ID不能为空");

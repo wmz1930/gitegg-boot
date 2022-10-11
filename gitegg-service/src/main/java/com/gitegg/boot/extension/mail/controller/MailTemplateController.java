@@ -122,7 +122,7 @@ public class MailTemplateController {
     */
     @PostMapping("/delete/{mailTemplateId}")
     @ApiOperation(value = "删除邮件模板")
-    @ApiImplicitParam(paramType = "path", name = "mailTemplateId", value = "邮件模板ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "mailTemplateId", value = "邮件模板ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("mailTemplateId") Long mailTemplateId) {
         if (null == mailTemplateId) {
             return Result.error("ID不能为空");
@@ -139,7 +139,7 @@ public class MailTemplateController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除邮件模板")
-    @ApiImplicitParam(name = "mailTemplateIds", value = "邮件模板ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "mailTemplateIds", value = "邮件模板ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> mailTemplateIds) {
         if (CollectionUtils.isEmpty(mailTemplateIds)) {
             return Result.error("邮件模板ID列表不能为空");
@@ -157,8 +157,8 @@ public class MailTemplateController {
      @PostMapping("/status/{mailTemplateId}/{templateStatus}")
      @ApiOperation(value = "修改邮件模板状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "mailTemplateId", value = "邮件模板ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "templateStatus", value = "邮件模板状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "mailTemplateId", value = "邮件模板ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "templateStatus", value = "邮件模板状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("mailTemplateId") Long mailTemplateId,
          @PathVariable("templateStatus") Integer templateStatus) {
 

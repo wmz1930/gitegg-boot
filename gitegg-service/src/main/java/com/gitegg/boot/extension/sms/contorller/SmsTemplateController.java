@@ -147,8 +147,8 @@ public class SmsTemplateController {
      @PostMapping("/status/{smsTemplateId}/{templateStatus}")
      @ApiOperation(value = "修改短信模板配置表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "smsTemplateId", value = "短信模板配置表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "templateStatus", value = "短信模板配置表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "smsTemplateId", value = "短信模板配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "templateStatus", value = "短信模板配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("smsTemplateId") Long smsTemplateId,
          @PathVariable("templateStatus") Integer templateStatus) {
 

@@ -109,7 +109,7 @@ public class JustAuthConfigController {
     */
     @PostMapping("/delete/{justAuthConfigId}")
     @ApiOperation(value = "删除租户第三方登录功能配置表")
-    @ApiImplicitParam(paramType = "path", name = "justAuthConfigId", value = "租户第三方登录功能配置表ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "justAuthConfigId", value = "租户第三方登录功能配置表ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("justAuthConfigId") Long justAuthConfigId) {
         if (null == justAuthConfigId) {
             return Result.error("ID不能为空");
@@ -126,7 +126,7 @@ public class JustAuthConfigController {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除租户第三方登录功能配置表")
-    @ApiImplicitParam(name = "justAuthConfigIds", value = "租户第三方登录功能配置表ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "justAuthConfigIds", value = "租户第三方登录功能配置表ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> justAuthConfigIds) {
         if (CollectionUtils.isEmpty(justAuthConfigIds)) {
             return Result.error("租户第三方登录功能配置表ID列表不能为空");
@@ -144,8 +144,8 @@ public class JustAuthConfigController {
      @PostMapping("/status/{justAuthConfigId}/{status}")
      @ApiOperation(value = "修改租户第三方登录功能配置表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "justAuthConfigId", value = "租户第三方登录功能配置表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "status", value = "租户第三方登录功能配置表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "justAuthConfigId", value = "租户第三方登录功能配置表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "status", value = "租户第三方登录功能配置表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("justAuthConfigId") Long justAuthConfigId,
          @PathVariable("status") Integer status) {
 

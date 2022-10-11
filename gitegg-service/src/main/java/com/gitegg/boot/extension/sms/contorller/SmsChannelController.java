@@ -158,8 +158,8 @@ public class SmsChannelController {
      @PostMapping("/status/{smsChannelId}/{channelStatus}")
      @ApiOperation(value = "修改短信渠道表状态")
      @ApiImplicitParams({
-     @ApiImplicitParam(name = "smsChannelId", value = "短信渠道表ID", required = true, dataType = "Long", paramType = "path"),
-     @ApiImplicitParam(name = "channelStatus", value = "短信渠道表状态", required = true, dataType = "Integer", paramType = "path") })
+     @ApiImplicitParam(name = "smsChannelId", value = "短信渠道表ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+     @ApiImplicitParam(name = "channelStatus", value = "短信渠道表状态", required = true, dataTypeClass = Integer.class, paramType = "path") })
      public Result<?> updateStatus(@PathVariable("smsChannelId") Long smsChannelId,
          @PathVariable("channelStatus") Integer channelStatus) {
 

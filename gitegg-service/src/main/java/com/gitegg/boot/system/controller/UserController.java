@@ -58,13 +58,13 @@ public class UserController {
     @GetMapping("/list")
     @ApiOperation(value = "查询用户列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "realName", value = "用户名", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "current", value = "当前页", required = false, dataType = "Integer", paramType = "query") })
+            @ApiImplicitParam(name = "realName", value = "用户名", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "邮箱", required = false, dataTypeClass = String.class, paramType = "query"),
+            @ApiImplicitParam(name = "roleId", value = "角色", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataTypeClass = Integer.class, paramType = "query"),
+            @ApiImplicitParam(name = "current", value = "当前页", required = false, dataTypeClass = Integer.class, paramType = "query") })
 //    @ResubmitLock(interval = 60, argsIndex = {0}, ignoreKeys = {"email","status"})
     public PageResult<UserInfo> list(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
         Page<UserInfo> pageUser = userService.selectUserList(page, user);

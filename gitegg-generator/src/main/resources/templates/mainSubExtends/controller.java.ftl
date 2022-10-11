@@ -158,7 +158,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/delete/{${table.entityPath}Id}")
     @ApiOperation(value = "删除${table.comment!}")
-    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataType = "Long")
+    @ApiImplicitParam(paramType = "path", name = "${table.entityPath}Id", value = "${table.comment!}ID", required = true, dataTypeClass = Long.class)
     public Result<?> delete(@PathVariable("${table.entityPath}Id") Long ${table.entityPath}Id) {
         if (null == ${table.entityPath}Id) {
             return Result.error("ID不能为空");
@@ -175,7 +175,7 @@ public class ${table.controllerName} {
     */
     @PostMapping("/batch/delete")
     @ApiOperation(value = "批量删除${table.comment!}")
-    @ApiImplicitParam(name = "${table.entityPath}Ids", value = "${table.comment!}ID列表", required = true, dataType = "List")
+    @ApiImplicitParam(name = "${table.entityPath}Ids", value = "${table.comment!}ID列表", required = true, dataTypeClass = List.class)
     public Result<?> batchDelete(@RequestBody List<Long> ${table.entityPath}Ids) {
         if (CollectionUtils.isEmpty(${table.entityPath}Ids)) {
             return Result.error("${table.comment!}ID列表不能为空");

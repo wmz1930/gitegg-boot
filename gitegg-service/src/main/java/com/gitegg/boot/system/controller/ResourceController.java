@@ -114,8 +114,8 @@ public class ResourceController {
     @PostMapping("/status/{resourceId}/{resourceStatus}")
     @ApiOperation(value = "修改权限状态")
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "resourceId", value = "角色ID", required = true, dataTypeClass = Long.class, paramType = "path"),
-        @ApiImplicitParam(name = "resourceStatus", value = "角色状态", required = true, dataTypeClass = Integer.class,
+        @ApiImplicitParam(name = "resourceId", value = "权限ID", required = true, dataTypeClass = Long.class, paramType = "path"),
+        @ApiImplicitParam(name = "resourceStatus", value = "权限状态", required = true, dataTypeClass = Integer.class,
             paramType = "path")})
     public Result<?> updateStatus(@PathVariable("resourceId") Long resourceId,
         @PathVariable("resourceStatus") Integer resourceStatus) {

@@ -150,7 +150,7 @@
     </select>
     </#if>
 
-	<!-- 通过parentId查询所有子${table.comment!} -->
+    <!-- 通过parentId查询所有子${table.comment!} -->
     <select id="select${entity}Children" resultType="${dtoPackage?replace("entity","dto")}.${entity}DTO" parameterType="${dtoPackage?replace("entity","dto")}.Query${entity}DTO">
         SELECT
         <include refid="Base_Column_List"/>

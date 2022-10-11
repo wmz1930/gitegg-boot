@@ -323,7 +323,7 @@ public class ${table.controllerName} {
         String fileName = URLEncoder.encode("${table.comment!}数据导入模板", "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "${table.comment!}数据列表";
-        EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(null);
+        EasyExcel.write(response.getOutputStream(), ${entity}Import.class).sheet(sheetName).doWrite(new ArrayList<>());
     }
     </#if>
  }

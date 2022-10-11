@@ -80,19 +80,9 @@ public enum CustomFileEnum {
     VUE("VUE", "/templates/singleTable/pageListTable.vue.ftl"),
 
     /**
-     * VUE
-     */
-    VUE_TREE_TABLE("VUE_TREE_TABLE", "/templates/singleTable/pageTreeTable.vue.ftl"),
-
-    /**
      * JS
      */
-    JS("JS", "/templates/singleTable/pageListTable.js.ftl"),
-
-    /**
-     * JS
-     */
-    JS_TREE_TABLE("JS_TREE_TABLE", "/templates/singleTable/pageTreeTable.js.ftl");
+    JS("JS", "/templates/singleTable/pageListTable.js.ftl");
 
     public String name;
 

@@ -38,7 +38,7 @@ public class GitEggAccessDecisionManager implements AccessDecisionManager {
     /**
      * 是否开启租户模式
      */
-    @Value(("${tenant.enable}"))
+    @Value("${tenant.enable}")
     private Boolean enable;
 
     /**

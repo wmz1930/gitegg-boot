@@ -33,7 +33,7 @@ public class ThirdCallbackFilter extends OncePerRequestFilter implements Ordered
     /**
      * 是否开启租户模式
      */
-    @Value(("${tenant.enable}"))
+    @Value("${tenant.enable}")
     private Boolean enable;
 
     @Override

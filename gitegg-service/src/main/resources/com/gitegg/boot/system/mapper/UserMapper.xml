@@ -209,7 +209,7 @@
 	</select>
 
     <!-- 批量查询用户信息 -->
-    <select id="queryUserList" resultType="com.gitegg.service.system.entity.UserInfo" parameterType="com.gitegg.service.system.dto.QueryUserDTO">
+    <select id="queryUserList" resultType="com.gitegg.boot.system.entity.UserInfo" parameterType="com.gitegg.boot.system.dto.QueryUserDTO">
         SELECT DISTINCT
         sysUser.id AS id,
         sysUser.tenant_id AS tenantId,

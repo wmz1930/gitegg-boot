@@ -167,7 +167,7 @@
 		</if>
 		<trim prefix="AND (" suffix=")" prefixOverrides="AND">
 			<if test="user.account != null and user.account != ''">
-				AND sysUser.account = #{user.account}
+				AND (sysUser.account = #{user.account} OR sysUser.nickname = #{user.account} OR sysUser.mobile = #{user.account} OR sysUser.email = #{user.account})
 			</if>
 			<if test="user.realName != null and user.realName != ''">
 				AND sysUser.real_name = #{user.realName}

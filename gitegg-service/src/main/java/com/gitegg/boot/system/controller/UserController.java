@@ -1,7 +1,10 @@
 package com.gitegg.boot.system.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitegg.boot.system.bo.UserExportBO;
+import com.gitegg.boot.system.bo.UserImportBO;
 import com.gitegg.boot.system.dto.CreateUserDTO;
 import com.gitegg.boot.system.dto.QueryUserDTO;
 import com.gitegg.boot.system.dto.UpdateDataPermissionUserDTO;
@@ -14,32 +17,36 @@ import com.gitegg.platform.base.annotation.resubmit.ResubmitLock;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
-import com.gitegg.platform.base.result.PageResult;
+import com.gitegg.platform.base.exception.BusinessException;
 import com.gitegg.platform.base.result.Result;
-import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @ClassName: UserController
  * @Description: User前端控制器
- * @author gitegg
+ * @author GitEgg
  * @date 2019年5月18日 下午4:03:58
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/system/user")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -63,11 +70,10 @@ public class UserController {
             @ApiImplicitParam(name = "status", value = "用户状态", required = false, dataTypeClass = Integer.class, paramType = "query"),
             @ApiImplicitParam(name = "size", value = "每页条数", required = false, dataTypeClass = Integer.class, paramType = "query"),
             @ApiImplicitParam(name = "current", value = "当前页", required = false, dataTypeClass = Integer.class, paramType = "query") })
-//    @ResubmitLock(interval = 60, argsIndex = {0}, ignoreKeys = {"email","status"})
-    public PageResult<UserInfo> list(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
-        Page<UserInfo> pageUser = userService.selectUserList(page, user);
-        PageResult<UserInfo> pageResult = new PageResult<>(pageUser.getTotal(), pageUser.getRecords());
-        return pageResult;
+//    @ResubmitLock(interval = 1, argsIndex = {0}, ignoreKeys = {"email","status"})
+    public Result<Page<UserInfo>> list( @ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
+        Page<UserInfo> pageUser = userService.queryUserPage(page, user);
+        return Result.data(pageUser);
     }
 
     /**
@@ -75,7 +81,7 @@ public class UserController {
      */
     @PostMapping("/create")
     @ApiOperation(value = "添加用户")
-    @ResubmitLock(interval = 10)
+    @ResubmitLock(interval = 5)
     public Result<?> create(@RequestBody @Valid CreateUserDTO user) {
         CreateUserDTO userDTO = userService.createUser(user);
         return Result.data(userDTO.getId());
@@ -216,7 +222,7 @@ public class UserController {
      */
     @PostMapping("/update/organization/data/permission")
     @ApiOperation(value = "更新用户数据权限")
-    public Result<?> updateUserDataPermission(@RequestBody UpdateDataPermissionUserDTO updateDataPermission) {
+    public Result<?> updateUserDataPermission(@Valid @RequestBody UpdateDataPermissionUserDTO updateDataPermission) {
         boolean result = dataPermissionUserService.updateUserOrganizationDataPermission(updateDataPermission);
         if (result) {
             return Result.success();
@@ -248,20 +254,78 @@ public class UserController {
             return Result.data(false);
         }
     }
+    
+    /**
+     * 下载用户导入数据模板
+     * @param response
+     */
+    @GetMapping("/download/template")
+    @ApiOperation("导出上传模板")
+    public void downloadTemplate(HttpServletResponse response) {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = null;
+        try {
+            fileName = URLEncoder.encode("用户批量导入模板", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            String sheetName = "用户数据列表";
+            EasyExcel.write(response.getOutputStream(), UserImportBO.class).sheet(sheetName).doWrite(new ArrayList<>());
+        } catch (Exception e) {
+            log.error("下载用户批量模板时发生错误:{}", e);
+            throw new BusinessException("下载批量模板失败:" + e);
+        }
+    }
+    
+    /**
+     * 批量导出用户数据
+     * @param response
+     * @param queryUserDTO
+     */
+    @PostMapping("/export")
+    @ApiOperation("导出数据")
+    public void exportUserList(HttpServletResponse response, @RequestBody QueryUserDTO queryUserDTO) {
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+        String fileName = null;
+        try {
+            fileName = URLEncoder.encode("用户数据列表", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            List<UserExportBO> userExportList = userService.exportUserList(queryUserDTO);
+            String sheetName = "用户数据列表";
+            EasyExcel.write(response.getOutputStream(), UserExportBO.class).sheet(sheetName).doWrite(userExportList);
+        } catch (Exception e) {
+            log.error("批量导出用户数据时发生错误:{}", e);
+            throw new BusinessException("批量导出失败:" + e);
+        }
+
+    }
+    
+    /**
+     * 批量上传用户数据
+     * @param file
+     * @return
+     */
+    @PostMapping("/import")
+    @ApiOperation("批量上传数据")
+    public Result<?> importUserList(@RequestParam("uploadFile") MultipartFile file) {
+        boolean importSuccess = userService.importUserList(file);
+        return Result.result(importSuccess);
+    }
 
     /**
      * 查询所有用户
      */
     @GetMapping("/organization/data/permission/list")
     @ApiOperation(value = "分页查询机构权限下的用户列表")
-    public PageResult<UserInfo> organizationDataUserList(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
+    public Result<Page<UserInfo>> organizationDataUserList(@ApiIgnore QueryUserDTO user, @ApiIgnore Page<UserInfo> page) {
         if(null == user.getOrganizationId())
         {
-            return new PageResult(GitEggConstant.COUNT_ZERO, new ArrayList<>());
+            Result.data(new Page<UserInfo>());
         }
         Page<UserInfo> pageUser = dataPermissionUserService.selectOrganizationUserList(page, user);
-        PageResult<UserInfo> pageResult = new PageResult<>(pageUser.getTotal(), pageUser.getRecords());
-        return pageResult;
+        return Result.data(pageUser);
     }
 
     /**

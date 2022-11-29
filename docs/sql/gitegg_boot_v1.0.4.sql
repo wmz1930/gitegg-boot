@@ -584,7 +584,7 @@ CREATE TABLE `t_sys_data_permission_role`  (
 -- ----------------------------
 -- Records of t_sys_data_permission_role
 -- ----------------------------
-INSERT INTO `t_sys_data_permission_role` VALUES (1, 0, 15, '查询用户列表数据权限', 'com.gitegg.service.system.mapper.UserMapper.selectUserList', 't_sys_organization_user', 'organizationUser', 'password,roleKey', 'roleIds,createTime', 't_sys_organization', 'orgDataPermission', '2', '', 1, '查询用户列表数据权限', '2021-05-13 16:59:07', 1, '2021-07-22 16:26:37', 1, 0);
+INSERT INTO `t_sys_data_permission_role` VALUES (1, 0, 15, '查询用户列表数据权限', 'com.gitegg.boot.system.mapper.UserMapper.selectUserList', 't_sys_organization_user', 'organizationUser', 'password,roleKey', 'roleIds,createTime', 't_sys_organization', 'orgDataPermission', '2', '', 1, '查询用户列表数据权限', '2021-05-13 16:59:07', 1, '2021-07-22 16:26:37', 1, 0);
 INSERT INTO `t_sys_data_permission_role` VALUES (2, 0, 15, '2342341', '2342342341', '2342341', '2342341', '2342341', '2342341', '2342341', '2342341', '3', NULL, 1, '2342341', '2021-05-13 18:13:02', 1, '2021-05-13 18:28:15', 1, 0);
 INSERT INTO `t_sys_data_permission_role` VALUES (3, 0, 15, '4234234', '234234', '23423', '234234', '234234', '234234', '234234', '234234', '3', NULL, 1, '23423423', '2021-05-13 18:24:13', 1, '2021-05-13 18:33:31', 1, 0);
 INSERT INTO `t_sys_data_permission_role` VALUES (4, 0, 16, '35345435', '3453455', '3345345', '345345', '345345345', '345345', '345345', '345345', '3', NULL, 1, '345345345435', '2021-05-14 16:57:45', 1, NULL, NULL, 1);

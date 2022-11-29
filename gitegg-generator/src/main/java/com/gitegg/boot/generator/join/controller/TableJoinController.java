@@ -11,7 +11,6 @@ import com.gitegg.boot.generator.join.entity.TableJoin;
 import com.gitegg.boot.generator.join.service.ITableJoinService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,9 +44,9 @@ public class TableJoinController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询多表查询时的联合表配置列表")
-    public PageResult<TableJoinDTO> list(QueryTableJoinDTO queryTableJoinDTO, Page<TableJoinDTO> page) {
+    public Result<Page<TableJoinDTO>> list(QueryTableJoinDTO queryTableJoinDTO, Page<TableJoinDTO> page) {
         Page<TableJoinDTO> pageTableJoin = tableJoinService.queryTableJoinList(page, queryTableJoinDTO);
-        return PageResult.data(pageTableJoin.getTotal(), pageTableJoin.getRecords());
+        return Result.data(pageTableJoin);
     }
 
     /**

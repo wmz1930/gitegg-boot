@@ -2,6 +2,7 @@ package com.gitegg.boot.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gitegg.boot.system.dto.CreateResourceDTO;
+import com.gitegg.boot.system.dto.QueryResourceDTO;
 import com.gitegg.boot.system.dto.QueryUserResourceDTO;
 import com.gitegg.boot.system.dto.UpdateResourceDTO;
 import com.gitegg.boot.system.entity.Resource;
@@ -43,14 +44,15 @@ public class ResourceController {
     /**
      * 查询权限资源树
      * 
-     * @param parentId
+     * @param queryResourceDTO
      * @return
      */
     @GetMapping(value = "/tree")
     @ApiOperation(value = "查询权限资源树", notes = "树状展示权限资源信息")
     @ApiImplicitParam(paramType = "query", name = "parentId", value = "父级ID", required = false, dataTypeClass = Long.class)
-    public Result<List<Resource>> queryResourceTree(Long parentId) {
-        List<Resource> treeList = resourceService.queryResourceByParentId(parentId);
+    public Result<List<Resource>> queryResourceTree(QueryResourceDTO queryResourceDTO) {
+        Resource resource = BeanCopierUtils.copyByClass(queryResourceDTO, Resource.class);
+        List<Resource> treeList = resourceService.queryResourceByParentId(resource);
         return Result.data(treeList);
     }
 
@@ -122,15 +124,8 @@ public class ResourceController {
         if (null == resourceId || StringUtils.isEmpty(resourceStatus)) {
             return Result.error("ID和状态不能为空");
         }
-        Resource resource = new Resource();
-        resource.setId(resourceId);
-        resource.setResourceStatus(resourceStatus);
-        boolean result = resourceService.updateResource(resource);
-        if (result) {
-            return Result.success();
-        } else {
-            return Result.error(ResultCodeEnum.FAILED);
-        }
+        boolean result = resourceService.updateResourceStatus(resourceId, resourceStatus);
+        return Result.result(result);
     }
 
     /**

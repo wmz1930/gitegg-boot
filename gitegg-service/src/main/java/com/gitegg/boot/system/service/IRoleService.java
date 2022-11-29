@@ -2,9 +2,12 @@ package com.gitegg.boot.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gitegg.boot.system.bo.RoleExportBO;
 import com.gitegg.boot.system.dto.CreateRoleDTO;
 import com.gitegg.boot.system.dto.UpdateRoleDTO;
+import com.gitegg.boot.system.dto.QueryRoleDTO;
 import com.gitegg.boot.system.entity.Role;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ public interface IRoleService extends IService<Role> {
      * @param role
      * @return
      */
-    Page<Role> selectRoleList(Page<Role> page, Role role);
+    Page<Role> selectRoleList(Page<Role> page, QueryRoleDTO role);
 
     /**
      * 创建角色
@@ -51,4 +54,18 @@ public interface IRoleService extends IService<Role> {
      * @return
      */
     boolean batchDeleteRole(List<Long> roleIds);
+    
+    /**
+     * 导出角色列表
+     * @param role
+     * @return
+     */
+    List<RoleExportBO> exportRoleList(QueryRoleDTO role);
+    
+    /**
+     * 导入角色列表
+     * @param file
+     * @return
+     */
+    boolean importRoleList(MultipartFile file);
 }

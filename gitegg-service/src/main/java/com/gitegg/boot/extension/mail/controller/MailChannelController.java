@@ -11,7 +11,6 @@ import com.gitegg.boot.extension.mail.entity.MailChannel;
 import com.gitegg.boot.extension.mail.entity.MailChannelExport;
 import com.gitegg.boot.extension.mail.entity.MailChannelImport;
 import com.gitegg.boot.extension.mail.service.IMailChannelService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -57,9 +56,9 @@ public class MailChannelController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询邮件渠道表列表")
-    public PageResult<MailChannelDTO> list(QueryMailChannelDTO queryMailChannelDTO, Page<MailChannelDTO> page) {
+    public Result<Page<MailChannelDTO>> list(QueryMailChannelDTO queryMailChannelDTO, Page<MailChannelDTO> page) {
         Page<MailChannelDTO> pageMailChannel = mailChannelService.queryMailChannelList(page, queryMailChannelDTO);
-        return PageResult.data(pageMailChannel.getTotal(), pageMailChannel.getRecords());
+        return Result.data(pageMailChannel);
     }
 
     /**

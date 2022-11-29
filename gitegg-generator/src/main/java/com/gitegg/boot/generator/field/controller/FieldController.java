@@ -8,7 +8,6 @@ import com.gitegg.boot.generator.field.entity.Field;
 import com.gitegg.boot.generator.field.service.IFieldService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,9 +41,9 @@ public class FieldController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询字段属性配置表列表")
-    public PageResult<FieldDTO> list(QueryFieldDTO queryFieldDTO, Page<FieldDTO> page) {
+    public Result<Page<FieldDTO>> list(QueryFieldDTO queryFieldDTO, Page<FieldDTO> page) {
         Page<FieldDTO> pageField = fieldService.queryFieldList(page, queryFieldDTO);
-        return PageResult.data(pageField.getTotal(), pageField.getRecords());
+        return Result.data(pageField);
     }
 
     /**

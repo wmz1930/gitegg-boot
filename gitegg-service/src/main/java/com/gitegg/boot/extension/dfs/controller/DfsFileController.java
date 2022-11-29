@@ -7,7 +7,6 @@ import com.gitegg.boot.extension.dfs.dto.DfsFileDTO;
 import com.gitegg.boot.extension.dfs.dto.QueryDfsFileDTO;
 import com.gitegg.boot.extension.dfs.dto.UpdateDfsFileDTO;
 import com.gitegg.boot.extension.dfs.service.IDfsFileService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -43,9 +42,9 @@ public class DfsFileController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询分布式存储文件记录表列表")
-    public PageResult<DfsFileDTO> list(QueryDfsFileDTO queryDfsFileDTO, Page<DfsFileDTO> page) {
+    public Result<Page<DfsFileDTO>> list(QueryDfsFileDTO queryDfsFileDTO, Page<DfsFileDTO> page) {
         Page<DfsFileDTO> pageDfsFile = dfsFileService.queryDfsFileList(page, queryDfsFileDTO);
-        return PageResult.data(pageDfsFile.getTotal(), pageDfsFile.getRecords());
+        return Result.data(pageDfsFile);
     }
 
     /**

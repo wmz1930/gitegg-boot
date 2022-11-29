@@ -11,7 +11,6 @@ import com.gitegg.boot.extension.mail.entity.MailLog;
 import com.gitegg.boot.extension.mail.entity.MailLogExport;
 import com.gitegg.boot.extension.mail.entity.MailLogImport;
 import com.gitegg.boot.extension.mail.service.IMailLogService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -55,9 +54,9 @@ public class MailLogController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询邮件记录列表")
-    public PageResult<MailLogDTO> list(QueryMailLogDTO queryMailLogDTO, Page<MailLogDTO> page) {
+    public Result<Page<MailLogDTO>> list(QueryMailLogDTO queryMailLogDTO, Page<MailLogDTO> page) {
         Page<MailLogDTO> pageMailLog = mailLogService.queryMailLogList(page, queryMailLogDTO);
-        return PageResult.data(pageMailLog.getTotal(), pageMailLog.getRecords());
+        return Result.data(pageMailLog);
     }
 
     /**

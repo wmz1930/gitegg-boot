@@ -4,6 +4,8 @@ system:
   maxTryTimes: 5
   #不需要验证码登录的最大次数
   maxNonCaptchaTimes: 2
+  #密码错误锁定时间，单位：秒
+  maxLockDuration: 7200
   #通用对称加密秘钥,生产环境请替换
   secret-key: YJyZJ28mMum6JA3Y
   #通用对称加密秘钥偏移,使用DES加密时，长度必须是8位，生产环境请替换
@@ -108,14 +110,14 @@ spring:
           exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1/gitegg_boot?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-          username: root
-          password: root
+          url: jdbc:mysql://172.16.20.188/gitegg_cloud?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          username: myHisc
+          password: root4Hisc
   redis:
     database: 1
-    host: 127.0.0.1
-    port: 6379
-    password: 123456
+    host: 172.16.20.188
+    port: 6312
+    password: myredis4Hisc
     ssl: false
     timeout: 2000
   redisson:
@@ -126,10 +128,10 @@ spring:
         timeout: 3000
         retryAttempts: 3
         retryInterval: 1500
-        password: 123456
+        password: myredis4Hisc
         subscriptionsPerConnection: 5
         clientName: null
-        address: "redis://127.0.0.1:6379"
+        address: "redis://172.16.20.188:6312"
         subscriptionConnectionMinimumIdleSize: 1
         subscriptionConnectionPoolSize: 50
         connectionMinimumIdleSize: 32

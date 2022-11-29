@@ -7,7 +7,6 @@ import com.gitegg.boot.extension.justauth.dto.JustAuthSocialUserDTO;
 import com.gitegg.boot.extension.justauth.dto.QueryJustAuthSocialUserDTO;
 import com.gitegg.boot.extension.justauth.dto.UpdateJustAuthSocialUserDTO;
 import com.gitegg.boot.extension.justauth.service.IJustAuthSocialUserService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,9 +44,9 @@ public class JustAuthSocialUserController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询第三方用户绑定列表")
-    public PageResult<JustAuthSocialUserDTO> list(QueryJustAuthSocialUserDTO queryJustAuthSocialUserDTO, Page<JustAuthSocialUserDTO> page) {
+    public Result<Page<JustAuthSocialUserDTO>> list(QueryJustAuthSocialUserDTO queryJustAuthSocialUserDTO, Page<JustAuthSocialUserDTO> page) {
         Page<JustAuthSocialUserDTO> pageJustAuthSocialUser = justAuthSocialUserService.queryJustAuthSocialUserList(page, queryJustAuthSocialUserDTO);
-        return PageResult.data(pageJustAuthSocialUser.getTotal(), pageJustAuthSocialUser.getRecords());
+        return Result.data(pageJustAuthSocialUser);
     }
 
     /**

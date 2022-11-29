@@ -10,7 +10,6 @@ import com.gitegg.boot.generator.dict.entity.GeneratorDict;
 import com.gitegg.boot.generator.dict.service.IGeneratorDictService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -48,10 +47,9 @@ public class GeneratorDictController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "查询字典列表")
-    public PageResult<GeneratorDictDTO> list(QueryGeneratorDictDTO dict, Page<GeneratorDictDTO> page) {
+    public Result<Page<GeneratorDictDTO>> list(QueryGeneratorDictDTO dict, Page<GeneratorDictDTO> page) {
         Page<GeneratorDictDTO> pageGeneratorDict = generatorDictService.selectGeneratorDictList(page, dict);
-        PageResult<GeneratorDictDTO> pageResult = new PageResult<>(pageGeneratorDict.getTotal(), pageGeneratorDict.getRecords());
-        return pageResult;
+        return Result.data(pageGeneratorDict);
     }
 
     /**

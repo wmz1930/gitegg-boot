@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,7 +22,8 @@ import java.util.List;
 public class UpdateUserDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    @NotNull(message="不能为空")
     @ApiModelProperty(value = "主键")
     private Long id;
 

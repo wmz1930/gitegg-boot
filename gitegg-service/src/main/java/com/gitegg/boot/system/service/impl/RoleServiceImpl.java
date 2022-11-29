@@ -1,10 +1,14 @@
 package com.gitegg.boot.system.service.impl;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.boot.system.bo.RoleExportBO;
+import com.gitegg.boot.system.bo.RoleImportBO;
 import com.gitegg.boot.system.dto.CreateRoleDTO;
+import com.gitegg.boot.system.dto.QueryRoleDTO;
 import com.gitegg.boot.system.dto.UpdateRoleDTO;
 import com.gitegg.boot.system.entity.Role;
 import com.gitegg.boot.system.entity.RoleResource;
@@ -21,7 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,9 +54,53 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     private IRoleResourceService roleResourceService;
 
     @Override
-    public Page<Role> selectRoleList(Page<Role> page, Role role) {
+    public Page<Role> selectRoleList(Page<Role> page, QueryRoleDTO role) {
         Page<Role> roleInfoList = roleMapper.selectRoleList(page, role);
         return roleInfoList;
+    }
+    
+    /**
+     * 导出角色列表
+     * @param role
+     * @return
+     */
+    @Override
+    public List<RoleExportBO> exportRoleList(QueryRoleDTO role) {
+        List<RoleExportBO> roleExportList = new ArrayList<>();
+        List<Role> roleInfoList = roleMapper.selectRoleList(role);
+        if (!CollectionUtils.isEmpty(roleInfoList))
+        {
+            for (Role roleInfo : roleInfoList) {
+                RoleExportBO roleExportBO = BeanCopierUtils.copyByClass(roleInfo, RoleExportBO.class);
+                roleExportList.add(roleExportBO);
+            }
+        }
+        return roleExportList;
+    }
+    
+    /**
+     * 导入角色列表
+     * @param file
+     * @return
+     */
+    @Override
+    public boolean importRoleList(MultipartFile file) {
+        boolean importSuccess = false;
+        try {
+            List<RoleImportBO> roleImportList = EasyExcel.read(file.getInputStream(), RoleImportBO.class, null).sheet().doReadSync();
+            if (!CollectionUtils.isEmpty(roleImportList))
+            {
+                List<Role> roleList = new ArrayList<>();
+                roleImportList.stream().forEach(roleImportBO-> {
+                    roleList.add(BeanCopierUtils.copyByClass(roleImportBO, Role.class));
+                });
+                importSuccess = this.saveBatch(roleList);
+            }
+        } catch (IOException e) {
+            log.error("批量导入角色数据时发生错误:{}", e);
+            throw new BusinessException("批量导入失败:" + e);
+        }
+        return importSuccess;
     }
 
     @Override
@@ -66,7 +118,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public boolean updateRole(UpdateRoleDTO role) {
+    public boolean updateRole(@Valid UpdateRoleDTO role) {
         LambdaQueryWrapper<Role> ew = new LambdaQueryWrapper<>();
         ew.ne(Role::getId, role.getId()).and(e -> e.eq(Role::getRoleName, role.getRoleName()).or().eq(Role::getRoleKey, role.getRoleKey()).or()
                 .eq(Role::getRoleName, role.getRoleKey()).or().eq(Role::getRoleKey, role.getRoleName()));
@@ -76,9 +128,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         }
 
         Role roleEntity = BeanCopierUtils.copyByClass(role, Role.class);
-        QueryWrapper<Role> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", roleEntity.getId());
-        boolean result = update(roleEntity, wrapper);
+        boolean result = this.updateById(roleEntity);
         return result;
     }
 
@@ -90,7 +140,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             // 删除用户和角色的关联关系
             LambdaQueryWrapper<UserRole> wr = new LambdaQueryWrapper<>();
             wr.eq(UserRole::getRoleId, roleId);
-            userRoleService.removeById(wr);
+            userRoleService.remove(wr);
             // 删除角色和权限的关联关系
             LambdaQueryWrapper<RoleResource> rr = new LambdaQueryWrapper<>();
             rr.eq(RoleResource::getRoleId, roleId);

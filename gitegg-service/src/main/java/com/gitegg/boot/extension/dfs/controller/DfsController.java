@@ -11,7 +11,6 @@ import com.gitegg.boot.extension.dfs.entity.Dfs;
 import com.gitegg.boot.extension.dfs.service.IDfsService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,9 +46,9 @@ public class DfsController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询分布式存储配置表列表")
-    public PageResult<DfsDTO> list(QueryDfsDTO queryDfsDTO, Page<DfsDTO> page) {
+    public Result<Page<DfsDTO>> list(QueryDfsDTO queryDfsDTO, Page<DfsDTO> page) {
         Page<DfsDTO> pageDfs = dfsService.queryDfsList(page, queryDfsDTO);
-        return PageResult.data(pageDfs.getTotal(), pageDfs.getRecords());
+        return Result.data(pageDfs);
     }
 
     /**

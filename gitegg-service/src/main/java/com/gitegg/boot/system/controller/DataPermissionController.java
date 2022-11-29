@@ -11,7 +11,6 @@ import com.gitegg.boot.system.service.IDataPermissionRoleService;
 import com.gitegg.boot.system.service.IRoleDataPermissionService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -49,9 +48,9 @@ public class DataPermissionController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询数据权限配置表列表")
-    public PageResult<DataPermissionRoleDTO> list(QueryDataPermissionRoleDTO queryDataPermissionRoleDTO, Page<DataPermissionRoleDTO> page) {
+    public Result<Page<DataPermissionRoleDTO>> list(QueryDataPermissionRoleDTO queryDataPermissionRoleDTO, Page<DataPermissionRoleDTO> page) {
         Page<DataPermissionRoleDTO> pageDataPermissionRole = dataPermissionRoleService.queryDataPermissionRoleList(page, queryDataPermissionRoleDTO);
-        return PageResult.data(pageDataPermissionRole.getTotal(), pageDataPermissionRole.getRecords());
+        return Result.data(pageDataPermissionRole);
     }
 
     /**

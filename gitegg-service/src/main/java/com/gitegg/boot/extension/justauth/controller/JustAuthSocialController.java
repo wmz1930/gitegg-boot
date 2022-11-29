@@ -9,7 +9,6 @@ import com.gitegg.boot.extension.justauth.dto.QueryJustAuthSocialDTO;
 import com.gitegg.boot.extension.justauth.dto.UpdateJustAuthSocialDTO;
 import com.gitegg.boot.extension.justauth.entity.JustAuthSocialExport;
 import com.gitegg.boot.extension.justauth.service.IJustAuthSocialService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -52,9 +51,9 @@ public class JustAuthSocialController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询租户第三方登录功能配置表列表")
-    public PageResult<JustAuthSocialDTO> list(QueryJustAuthSocialDTO queryJustAuthSocialDTO, Page<JustAuthSocialDTO> page) {
+    public Result<Page<JustAuthSocialDTO>> list(QueryJustAuthSocialDTO queryJustAuthSocialDTO, Page<JustAuthSocialDTO> page) {
         Page<JustAuthSocialDTO> pageJustAuthSocial = justAuthSocialService.queryJustAuthSocialList(page, queryJustAuthSocialDTO);
-        return PageResult.data(pageJustAuthSocial.getTotal(), pageJustAuthSocial.getRecords());
+        return Result.data(pageJustAuthSocial);
     }
 
     /**

@@ -14,7 +14,6 @@ import com.gitegg.boot.generator.validate.entity.ValidateImport;
 import com.gitegg.boot.generator.validate.service.IValidateService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -60,9 +59,9 @@ public class ValidateController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询字段校验规则配置表列表")
-    public PageResult<ValidateDTO> list(QueryValidateDTO queryValidateDTO, Page<ValidateDTO> page) {
+    public Result<Page<ValidateDTO>> list(QueryValidateDTO queryValidateDTO, Page<ValidateDTO> page) {
         Page<ValidateDTO> pageValidate = validateService.queryValidateList(page, queryValidateDTO);
-        return PageResult.data(pageValidate.getTotal(), pageValidate.getRecords());
+        return Result.data(pageValidate);
     }
 
     /**

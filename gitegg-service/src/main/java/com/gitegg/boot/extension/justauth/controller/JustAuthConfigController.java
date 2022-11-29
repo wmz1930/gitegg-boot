@@ -11,7 +11,6 @@ import com.gitegg.boot.extension.justauth.entity.JustAuthConfig;
 import com.gitegg.boot.extension.justauth.entity.JustAuthConfigExport;
 import com.gitegg.boot.extension.justauth.entity.JustAuthConfigImport;
 import com.gitegg.boot.extension.justauth.service.IJustAuthConfigService;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -57,9 +56,9 @@ public class JustAuthConfigController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询租户第三方登录功能配置表列表")
-    public PageResult<JustAuthConfigDTO> list(QueryJustAuthConfigDTO queryJustAuthConfigDTO, Page<JustAuthConfigDTO> page) {
+    public Result<Page<JustAuthConfigDTO>> list(QueryJustAuthConfigDTO queryJustAuthConfigDTO, Page<JustAuthConfigDTO> page) {
         Page<JustAuthConfigDTO> pageJustAuthConfig = justAuthConfigService.queryJustAuthConfigList(page, queryJustAuthConfigDTO);
-        return PageResult.data(pageJustAuthConfig.getTotal(), pageJustAuthConfig.getRecords());
+        return Result.data(pageJustAuthConfig);
     }
 
     /**

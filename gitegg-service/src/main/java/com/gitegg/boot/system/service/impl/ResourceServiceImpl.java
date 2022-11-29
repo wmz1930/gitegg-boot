@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitegg.boot.system.dto.QueryUserResourceDTO;
 import com.gitegg.boot.system.enums.ResourceEnum;
@@ -121,6 +122,22 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 
         return result;
     }
+    
+    /**
+     * 修改资源权限状态
+     * @param resourceId
+     * @return
+     */
+    @Override
+    public boolean updateResourceStatus( Long resourceId, Integer status) {
+        if (null == resourceId || null == status) {
+            throw new BusinessException("参数错误");
+        }
+        LambdaUpdateWrapper<Resource> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Resource::getResourceStatus, status).eq(Resource::getId, resourceId);
+        boolean result = this.update(updateWrapper);
+        return result;
+    }
 
     @Override
     public boolean deleteResource(Long resourceId) {
@@ -166,15 +183,13 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     }
 
     @Override
-    public List<Resource> queryResourceByParentId(Long parentId) {
+    public List<Resource> queryResourceByParentId(Resource resource) {
         List<Resource> resourceList;
         try {
-            if (null == parentId) {
-                parentId = GitEggConstant.PARENT_ID;
+            if (null == resource.getParentId()) {
+                resource.setParentId(GitEggConstant.PARENT_ID);
             }
-            Resource resourceParent = new Resource();
-            resourceParent.setParentId(parentId);
-            List<Resource> resources = resourceMapper.selectResourceChildren(resourceParent);
+            List<Resource> resources = resourceMapper.selectResourceChildren(resource);
             Map<Long, Resource> resourceMap = new HashMap<>();
             resourceList = this.assembleResourceTree(resources,resourceMap);
         } catch (Exception e) {

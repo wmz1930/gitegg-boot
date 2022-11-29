@@ -11,7 +11,6 @@ import com.gitegg.boot.generator.config.entity.Config;
 import com.gitegg.boot.generator.config.service.IConfigService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,9 +44,9 @@ public class ConfigController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询代码生成配置表列表")
-    public PageResult<ConfigDTO> list(QueryConfigDTO queryConfigDTO, Page<ConfigDTO> page) {
+    public Result<Page<ConfigDTO>> list(QueryConfigDTO queryConfigDTO, Page<ConfigDTO> page) {
         Page<ConfigDTO> pageConfig = configService.queryConfigList(page, queryConfigDTO);
-        return PageResult.data(pageConfig.getTotal(), pageConfig.getRecords());
+        return Result.data(pageConfig);
     }
 
     /**

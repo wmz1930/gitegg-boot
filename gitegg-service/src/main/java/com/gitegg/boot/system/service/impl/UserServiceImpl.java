@@ -1,10 +1,13 @@
 package com.gitegg.boot.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitegg.boot.system.bo.UserExportBO;
+import com.gitegg.boot.system.bo.UserImportBO;
 import com.gitegg.boot.system.dto.CreateUserDTO;
 import com.gitegg.boot.system.dto.QueryUserDTO;
 import com.gitegg.boot.system.dto.QueryUserResourceDTO;
@@ -29,7 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,17 +77,71 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     
     @Value("${system.defaultPwdChangeFirst}")
     private boolean defaultPwdChangeFirst;
-
+    
+    /**
+     * 分页查询用户
+     * @param user
+     * @return
+     */
     @Override
-    public Page<UserInfo> selectUserList(Page<UserInfo> page, QueryUserDTO user) {
-        Page<UserInfo> pageUserInfo = userMapper.selectUserList(page, user);
+    public Page<UserInfo> queryUserPage(Page<UserInfo> page, QueryUserDTO user) {
+        Page<UserInfo> pageUserInfo = userMapper.queryUserPage(page, user);
         return pageUserInfo;
     }
     
+    /**
+     * 批量查询用户
+     * @param user
+     * @return
+     */
     @Override
     public List<UserInfo> queryUserList( QueryUserDTO user) {
         List<UserInfo> userInfoList = userMapper.queryUserList(user);
         return userInfoList;
+    }
+    
+    /**
+     * 导出用户列表
+     * @param user
+     * @return
+     */
+    @Override
+    public List<UserExportBO> exportUserList(QueryUserDTO user) {
+        List<UserExportBO> userExportList = new ArrayList<>();
+        List<UserInfo> userInfoList = this.queryUserList(user);
+        if (!CollectionUtils.isEmpty(userInfoList))
+        {
+            for (UserInfo userInfo : userInfoList) {
+                UserExportBO userExportBO = BeanCopierUtils.copyByClass(userInfo, UserExportBO.class);
+                userExportList.add(userExportBO);
+            }
+        }
+        return userExportList;
+    }
+    
+    /**
+     * 导入用户列表
+     * @param file
+     * @return
+     */
+    @Override
+    public boolean importUserList(MultipartFile file) {
+        boolean importSuccess = false;
+        try {
+            List<UserImportBO> userImportList = EasyExcel.read(file.getInputStream(), UserImportBO.class, null).sheet().doReadSync();
+            if (!CollectionUtils.isEmpty(userImportList))
+            {
+                List<User> userList = new ArrayList<>();
+                userImportList.stream().forEach(userImportBO-> {
+                    userList.add(BeanCopierUtils.copyByClass(userImportBO, User.class));
+                });
+                importSuccess = this.saveBatch(userList);
+            }
+        } catch (IOException e) {
+            log.error("批量导入用户数据时发生错误:{}", e);
+            throw new BusinessException("批量导入失败:" + e);
+        }
+        return importSuccess;
     }
     
     /**

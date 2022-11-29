@@ -14,7 +14,6 @@ import com.gitegg.boot.generator.datasource.entity.DatasourceImport;
 import com.gitegg.boot.generator.datasource.service.IDatasourceService;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.base.dto.CheckExistDTO;
-import com.gitegg.platform.base.result.PageResult;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -54,9 +53,9 @@ public class DatasourceController {
     */
     @GetMapping("/list")
     @ApiOperation(value = "查询数据源配置表列表")
-    public PageResult<DatasourceDTO> list(QueryDatasourceDTO queryDatasourceDTO, Page<DatasourceDTO> page) {
+    public Result<Page<DatasourceDTO>> list(QueryDatasourceDTO queryDatasourceDTO, Page<DatasourceDTO> page) {
         Page<DatasourceDTO> pageDatasource = datasourceService.queryDatasourceList(page, queryDatasourceDTO);
-        return PageResult.data(pageDatasource.getTotal(), pageDatasource.getRecords());
+        return Result.data(pageDatasource);
     }
 
     /**

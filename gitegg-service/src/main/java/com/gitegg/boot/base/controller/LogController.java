@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2018-10-24
  */
 @RestController
-@RequestMapping("/extension/base/log")
+@RequestMapping("/base/log")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "LogController|日志查询前端控制器", tags = {"日志查询"})
 public class LogController {

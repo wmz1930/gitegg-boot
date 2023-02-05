@@ -2,6 +2,7 @@ package com.gitegg.boot.extension.mail.controller;
 
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitegg.boot.extension.mail.dto.CreateMailChannelDTO;
 import com.gitegg.boot.extension.mail.dto.MailChannelDTO;
@@ -11,6 +12,8 @@ import com.gitegg.boot.extension.mail.entity.MailChannel;
 import com.gitegg.boot.extension.mail.entity.MailChannelExport;
 import com.gitegg.boot.extension.mail.entity.MailChannelImport;
 import com.gitegg.boot.extension.mail.service.IMailChannelService;
+import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.result.Result;
 import com.gitegg.platform.base.util.BeanCopierUtils;
 import io.swagger.annotations.Api;
@@ -192,7 +195,7 @@ public class MailChannelController {
     @PostMapping("/upload")
     @ApiOperation("批量上传数据")
     public Result<?> upload(@RequestParam("uploadFile") MultipartFile file) throws IOException {
-        List<MailChannelImport> mailChannelImportList =  EasyExcel.read(file.getInputStream(), MailChannelImport.class, null).sheet().doReadSync();
+        List<MailChannelImport> mailChannelImportList = EasyExcel.read(file.getInputStream(), MailChannelImport.class, null).sheet().doReadSync();
         if (!CollectionUtils.isEmpty(mailChannelImportList))
         {
             List<MailChannel> mailChannelList = new ArrayList<>();
@@ -219,5 +222,25 @@ public class MailChannelController {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
         String sheetName = "邮件渠道表数据列表";
         EasyExcel.write(response.getOutputStream(), MailChannelImport.class).sheet(sheetName).doWrite(new ArrayList<>());
+    }
+    
+    /**
+     * 校验邮件渠道
+     *
+     * @param mailChannel
+     * @return
+     */
+    @PostMapping(value = "/check")
+    @ApiOperation(value = "校验邮件渠道是否存在", notes = "校验邮件渠道是否存在")
+    public Result<Boolean> checkMailChannelExist(@RequestBody CheckExistDTO mailChannel) {
+        String field = mailChannel.getCheckField();
+        String value = mailChannel.getCheckValue();
+        QueryWrapper<MailChannel> mailChannelQueryWrapper = new QueryWrapper<>();
+        mailChannelQueryWrapper.eq(field, value);
+        if(null != mailChannel.getId()) {
+            mailChannelQueryWrapper.ne("id", mailChannel.getId());
+        }
+        int count = mailChannelService.count(mailChannelQueryWrapper);
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
  }

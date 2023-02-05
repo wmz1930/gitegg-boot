@@ -20,8 +20,7 @@ public enum AuthEnum {
      * 短信验证码登录
      */
     SMS_CAPTCHA("sms_captcha", "短信验证码登录"),
-
-
+    
     /**
      * 第三方登录
      */

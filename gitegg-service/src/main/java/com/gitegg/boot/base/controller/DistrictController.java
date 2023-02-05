@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2018-05-26
  */
 @RestController
-@RequestMapping("/extension/base/district")
+@RequestMapping("/base/district")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "DistrictController|地区配置表前端控制器", tags = {"地区配置"})
 public class DistrictController {

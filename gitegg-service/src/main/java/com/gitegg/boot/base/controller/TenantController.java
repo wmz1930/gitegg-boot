@@ -32,7 +32,7 @@ import java.util.List;
  * @since 2020-12-18
  */
 @RestController
-@RequestMapping("/extension/base/tenant")
+@RequestMapping("/base/tenant")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "TenantController|租户信息表前端控制器", tags = {"租户信息配置"})
 public class TenantController {
@@ -136,7 +136,7 @@ public class TenantController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验租户信息表是否存在", notes = "校验租户信息表是否存在")
-    public Result<Boolean> checkTenantExist(CheckExistDTO tenant) {
+    public Result<Boolean> checkTenantExist(@RequestBody CheckExistDTO tenant) {
         String field = tenant.getCheckField();
         String value = tenant.getCheckValue();
         QueryWrapper<Tenant> tenantQueryWrapper = new QueryWrapper<>();

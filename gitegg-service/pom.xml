@@ -72,6 +72,11 @@
             <groupId>com.gitegg.platform</groupId>
             <artifactId>gitegg-platform-mail</artifactId>
         </dependency>
+        <!-- 微信小程序 -->
+        <dependency>
+            <groupId>com.gitegg.platform</groupId>
+            <artifactId>gitegg-platform-wechat</artifactId>
+        </dependency>
         <!-- 定时任务 -->
         <dependency>
             <groupId>com.gitegg.platform</groupId>

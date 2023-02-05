@@ -169,7 +169,7 @@ public class SmsTemplateController {
     */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验短信模板配置表是否存在", notes = "校验短信模板配置表是否存在")
-    public Result<Boolean> checkSmsTemplateExist(CheckExistDTO smsTemplate) {
+    public Result<Boolean> checkSmsTemplateExist(@RequestBody CheckExistDTO smsTemplate) {
         String field = smsTemplate.getCheckField();
         String value = smsTemplate.getCheckValue();
         QueryWrapper<SmsTemplate> smsTemplateQueryWrapper = new QueryWrapper<>();
@@ -178,11 +178,7 @@ public class SmsTemplateController {
             smsTemplateQueryWrapper.ne("id", smsTemplate.getId());
         }
         int count = smsTemplateService.count(smsTemplateQueryWrapper);
-        if (GitEggConstant.COUNT_ZERO == count){
-            return Result.data(true);
-        } else{
-            return Result.data(false);
-        }
+        return Result.data(GitEggConstant.COUNT_ZERO == count);
     }
 
     /**

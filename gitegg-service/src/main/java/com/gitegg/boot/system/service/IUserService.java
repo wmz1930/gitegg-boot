@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gitegg.boot.system.bo.UserExportBO;
 import com.gitegg.boot.system.dto.CreateUserDTO;
 import com.gitegg.boot.system.dto.QueryUserDTO;
+import com.gitegg.boot.system.dto.UpdateAccountDTO;
 import com.gitegg.boot.system.dto.UpdateUserDTO;
 import com.gitegg.boot.system.entity.User;
 import com.gitegg.boot.system.entity.UserInfo;
@@ -32,7 +33,7 @@ public interface IUserService extends IService<User> {
 
     /**
      * 更新用户
-     * 、     * @param user
+     * @param user
      * @param
      * @return
      */
@@ -118,4 +119,12 @@ public interface IUserService extends IService<User> {
      * @return
      */
     boolean importUserList(MultipartFile file);
+    
+    /**
+     * 更新账号
+     * @param account
+     * @param
+     * @return
+     */
+    boolean updateAccount(UpdateAccountDTO account);
 }

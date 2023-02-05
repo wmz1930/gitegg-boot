@@ -48,9 +48,7 @@
 		sysUser.avatar AS avatar,
 		sysUser.country AS country,
 		sysUser.province AS province,
-		provinceDistrict.district_name AS provinceName,
 		sysUser.city AS city,
-		cityDistrict.district_name AS cityName,
 		sysUser.area AS area,
 		sysUser.street AS street,
 		sysUser.comments AS comments,
@@ -67,8 +65,6 @@
 		FROM t_sys_user sysUser
 		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
 		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
-		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
-		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
 		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
 		dataPermission.del_flag = 0
 		INNER JOIN t_sys_organization_user organizationUser ON sysUser.id = organizationUser.user_id AND
@@ -136,9 +132,7 @@
 		sysUser.avatar AS avatar,
 		sysUser.country AS country,
 		sysUser.province AS province,
-		provinceDistrict.district_name AS provinceName,
 		sysUser.city AS city,
-		cityDistrict.district_name AS cityName,
 		sysUser.area AS area,
 		sysUser.street AS street,
 		sysUser.comments AS comments,
@@ -156,7 +150,6 @@
 		FROM t_sys_user sysUser
 		INNER JOIN t_sys_user_role userRole ON sysUser.id = userRole.user_id AND userRole.del_flag = 0
 		LEFT JOIN t_sys_role sysRole ON userRole.role_id = sysRole.id AND sysRole.del_flag = 0
-		LEFT JOIN t_sys_district provinceDistrict ON sysUser.province = provinceDistrict.code
 		LEFT JOIN t_sys_district cityDistrict ON sysUser.city = cityDistrict.code
 		LEFT JOIN t_sys_data_permission_user dataPermission ON sysUser.id = dataPermission.user_id AND
 		dataPermission.del_flag = 0

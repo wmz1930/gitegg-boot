@@ -35,7 +35,7 @@ import java.util.Map;
  * @since 2018-10-28
  */
 @RestController
-@RequestMapping("/extension/base/business/dict")
+@RequestMapping("/base/business/dict")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Api(value = "DictBusinessController|业务数据字典表前端控制器", tags = {"业务数据字典配置"})
 public class DictBusinessController {
@@ -203,7 +203,7 @@ public class DictBusinessController {
      */
     @PostMapping(value = "/check")
     @ApiOperation(value = "校验字典code是否存在", notes = "校验字典code是否存在")
-    public Result<Boolean> checkUserExist(UpdateDictBusinessDTO dictBusinessDTO) {
+    public Result<Boolean> checkUserExist(@RequestBody UpdateDictBusinessDTO dictBusinessDTO) {
         QueryWrapper<DictBusiness> dictBusinessQueryWrapper = new QueryWrapper<>();
         if (null != dictBusinessDTO && null != dictBusinessDTO.getId()) {
             dictBusinessQueryWrapper.ne("id", dictBusinessDTO.getId());

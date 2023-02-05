@@ -1,5 +1,6 @@
 package com.gitegg.boot.extension.mail.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gitegg.platform.mybatis.entity.BaseEntity;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
@@ -82,6 +83,7 @@ public class UpdateMailLogDTO extends BaseEntity {
 
     @ApiModelProperty(value = "发送时间")
     @Length(min=1,max=19)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendTime;
 
     @ApiModelProperty(value = "发送结果码")

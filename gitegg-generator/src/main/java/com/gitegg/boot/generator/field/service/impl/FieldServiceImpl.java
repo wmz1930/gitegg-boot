@@ -132,7 +132,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 fieldDTO.setDefaultValue(field.getMetaInfo().getDefaultValue());
 
                 //如果为数值类型，则处理最大值和最小值
-                if (!StringUtils.isEmpty(com.gitegg.boot.generator.enums.NumberMinEnum.getRange(field.getPropertyType())))
+                if (!StringUtils.isEmpty(NumberMinEnum.getRange(field.getPropertyType())))
                 {
                     fieldDTO.setMin(NumberMinEnum.getRange(field.getPropertyType()));
                 }

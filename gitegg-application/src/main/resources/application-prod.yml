@@ -26,6 +26,8 @@ system:
   socialLoginExpiration: 3600
   #第三方登录最大尝试次数，如果超过次数，那么需重新授权
   socialLoginTryTimes: 5
+  #默认文件操作目录
+  defaultDir: /tmp
   #OAuth2公钥和密码
   keyPair:
     keyLocation: gitegg.jks
@@ -340,6 +342,14 @@ justauth:
     type: Redis
     prefix: 'GITEGG:JUSTAUTH:'
     timeout: 1h
+wx:
+  miniapp:
+    configs:
+      - appid: xxxxxxxxx
+        secret: xxxxxxxxx
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
 knife4j:
   basic:
     enable: true #开启认证
@@ -374,11 +384,24 @@ oauth-list:
     - "/extension/sms/code/send"
     - "/extension/sms/check/code/pre"
     - "/extension/sms/check/code"
+    - "/extension/wechat/user/{appid}/login"
+    - "/extension/wechat/user/{appid}/info"
+    - "/extension/batch/get/file/url"
     - "/system/account/register/sms/send"
     - "/system/account/register"
     - "/system/account/register/check"
+    - "/system/account/pwd/sms/send"
+    - "/system/account/pwd/update"
   authUrls:
     - "/oauth/logout"
     - "/oauth/user/info"
     - "/system/account/user/info"
-    - "/extension/base/upload/file"
+    - "/extension/upload/file"
+    - "/system/account/info/update"
+    - "/system/account/avatar/update"
+    - "/system/resource/user/menu"
+    - "/system/resource/user/resource"
+    - "/extension/dfs/query/default"
+    - "/extension/wx/user/{appid}/phone"
+    - "/extension/wx/user/bind"
+    - "/extension/wx/user/unbind"

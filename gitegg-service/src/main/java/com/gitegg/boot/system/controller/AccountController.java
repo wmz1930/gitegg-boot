@@ -2,11 +2,9 @@ package com.gitegg.boot.system.controller;
 
 import com.anji.captcha.service.CaptchaService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.gitegg.boot.extension.sms.service.ISmsService;
-import com.gitegg.boot.system.dto.CreateUserDTO;
-import com.gitegg.boot.system.dto.PwdUserDTO;
-import com.gitegg.boot.system.dto.RegisterUserDTO;
-import com.gitegg.boot.system.dto.SmsDTO;
+import com.gitegg.boot.system.dto.*;
 import com.gitegg.boot.system.entity.User;
 import com.gitegg.boot.system.entity.UserInfo;
 import com.gitegg.boot.system.service.IUserService;
@@ -65,6 +63,28 @@ public class AccountController {
         user.setId(currentUser.getId());
         UserInfo userInfo = userService.queryUserInfo(user);
         return Result.data(userInfo);
+    }
+    
+    /**
+     * 更新头像
+     */
+    @PostMapping("/avatar/update")
+    @ApiOperation(value = "更新头像")
+    public Result<?> updateAvatar(@Valid @RequestBody UpdateAvatarDTO account, @ApiIgnore @CurrentUser GitEggUser currentUser) {
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(User::getId, currentUser.getId()).set(User::getAvatar, account.getAvatar());
+        boolean result = userService.update(updateWrapper);
+        return Result.result(result);
+    }
+    
+    /**
+     * 更新账号信息，只允许更新部分内容
+     */
+    @PostMapping("/info/update")
+    @ApiOperation(value = "更新用户信息")
+    public Result<?> updateInfo(@Valid @RequestBody UpdateAccountDTO account) {
+        boolean result = userService.updateAccount(account);
+        return Result.result(result);
     }
     
     /**
@@ -128,27 +148,27 @@ public class AccountController {
     /**
      * 发送修改密码的短信验证码
      */
-    @PostMapping("/sms/pwd")
+    @PostMapping("/pwd/sms/send")
     @ApiOperation(value = "未登录用户找回密码，发送修改密码的短信验证码")
-    public Result<?> sendSmsPwd(@Valid @RequestBody SmsDTO smsDTO) {
-        String phoneNumber = smsDTO.getMobile();
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getMobile, smsDTO.getMobile());
-        User user = userService.getOne(wrapper);
-        if (null == user) {
-            return Result.error("该手机尚未注册");
+    public Result<?> sendSmsPwd(@ApiIgnore @RequestParam Map<String, String> parameters) {
+        //校验验证码
+        boolean checkCaptchaResult = CaptchaUtils.checkCaptcha(parameters, redisTemplate, captchaService);
+        if (!checkCaptchaResult)
+        {
+            throw new BusinessException("请通过正确的安全验证，再发送短信验证码");
         }
-        return smsService.sendSmsVerificationCode("sms_change_pwd_code", phoneNumber);
-    }
-
-    /**
-     * 验证找回密码的验证码
-     */
-    @PostMapping("/pwd/code/check")
-    @ApiOperation(value = "未登录用户找回密码，判断验证码是否正确")
-    public Result<?> pwdCodeCheck(@Valid @RequestBody RegisterUserDTO user) {
-        Result<?> smsResult = smsService.checkSmsVerificationCode("sms_register_code", user.getMobile(), user.getSmsCode());
-        return smsResult;
+        //校验手机号是否已注册
+        String mobile = parameters.get(TokenConstant.PHONE_NUMBER);
+        User user = new User();
+        user.setMobile(mobile);
+        boolean exist = userService.checkUserExist(user);
+        if (!exist)
+        {
+            throw new BusinessException("该手机尚未注册");
+        }
+        // 发送验证码
+        Result<?> smsResponse = smsService.sendSmsVerificationCode(parameters.get(TokenConstant.SMS_CODE), mobile);
+        return smsResponse;
     }
 
     /**
@@ -157,7 +177,7 @@ public class AccountController {
     @PostMapping("/pwd/update")
     @ApiOperation(value = "未登录用户找回密码，更新密码")
     public Result<?> changePwd(@Valid @RequestBody PwdUserDTO user) {
-        Result<?> smsResult = smsService.checkSmsVerificationCode("sms_register_code", user.getMobile(), user.getSmsCode());
+        Result<?> smsResult = smsService.checkSmsVerificationCode(user.getSmsCode(), user.getMobile(), user.getCode());
         // 判断短信验证是否成功
         if (smsResult.isSuccess() && null != smsResult.getData()) {
             Boolean checkResult = (Boolean)smsResult.getData();

@@ -1,5 +1,6 @@
 package com.gitegg.boot.generator.config.service;
 
+import com.gitegg.boot.generator.config.entity.Config;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gitegg.boot.generator.config.dto.ConfigDTO;
@@ -40,7 +41,7 @@ public interface IConfigService extends IService<Config> {
     * @param config
     * @return
     */
-    boolean createConfig(CreateConfigDTO config);
+    Config createConfig(CreateConfigDTO config);
 
     /**
     * 更新代码生成配置表

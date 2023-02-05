@@ -44,6 +44,7 @@ public class MultiWebSecurityConfig {
     public static PasswordEncoder passwordEncoder() {
         DelegatingPasswordEncoder delegatingPasswordEncoder =
                 (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
         return  delegatingPasswordEncoder;
     }
 

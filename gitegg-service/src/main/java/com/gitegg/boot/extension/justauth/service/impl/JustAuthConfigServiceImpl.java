@@ -188,7 +188,7 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
         Map<String, String> authConfigMap = new TreeMap<>();
         Optional.ofNullable(configList).orElse(new ArrayList<>()).forEach(config -> {
             try {
-                authConfigMap.put(config.getTenantId().toString(), JsonUtils.objToJson(config));
+                authConfigMap.put(enable ? config.getTenantId().toString() : AuthConstant.SOCIAL_DEFAULT, JsonUtils.objToJson(config));
                 redisTemplate.opsForHash().putAll(key, authConfigMap);
             } catch (Exception e) {
                 log.error("初始化第三方登录失败：{}" , e);
@@ -203,7 +203,7 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
               if (enable) {
                       redisKey = AuthConstant.SOCIAL_TENANT_CONFIG_KEY + justAuthConfig.getTenantId();
                }
-              redisTemplate.opsForHash().put(redisKey, justAuthConfig.getTenantId().toString(), JsonUtils.objToJson(justAuthConfig));
+              redisTemplate.opsForHash().put(redisKey, enable ? justAuthConfig.getTenantId().toString() : AuthConstant.SOCIAL_DEFAULT, JsonUtils.objToJson(justAuthConfig));
             } catch (Exception e) {
                 log.error("修改第三方登录缓存失败：{}" , e);
         }
@@ -215,7 +215,7 @@ public class JustAuthConfigServiceImpl extends ServiceImpl<JustAuthConfigMapper,
             if (enable) {
                 redisKey = AuthConstant.SOCIAL_TENANT_CONFIG_KEY + justAuthConfig.getTenantId();
             }
-            redisTemplate.opsForHash().delete(redisKey, justAuthConfig.getTenantId().toString(), JsonUtils.objToJson(justAuthConfig));
+            redisTemplate.opsForHash().delete(redisKey, enable ? justAuthConfig.getTenantId().toString() : AuthConstant.SOCIAL_DEFAULT, JsonUtils.objToJson(justAuthConfig));
         } catch (Exception e) {
             log.error("删除第三方登录缓存失败：{}" , e);
         }

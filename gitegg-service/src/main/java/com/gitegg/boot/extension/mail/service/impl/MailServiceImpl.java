@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 /**
+ * 这里只考虑系统发送通知邮件等基本常用接口，不是复杂的邮件系统，其他高级功能请自己定制
  * 原生Mail发送方法，和MailTenantServiceImpl互斥，只会初始化其中一个
  * @author GitEgg
  * @date 2022/6/25

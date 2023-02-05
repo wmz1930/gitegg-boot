@@ -267,6 +267,5 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         }
         return ${table.entityPath}s;
     }
-
 }
 </#if>

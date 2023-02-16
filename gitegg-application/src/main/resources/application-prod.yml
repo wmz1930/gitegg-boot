@@ -133,8 +133,8 @@ spring:
     cache: false
   #  mail:
   #    tenant: true
-  #    username: wanglei@hisc.com.cn
-  #    password: "!QAZxsw2"
+  #    username: xxxx@xxxxx
+  #    password: "xxxxxxxx"
   #    default-encoding: UTF-8
   #    host: smtp.mxhichina.com
   #    port: 25

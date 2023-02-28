@@ -29,7 +29,7 @@ VALUES
       '2',
       'jiaoseguanli',
       'table',
-      '<#if config.serviceName?? && config.serviceName != "">${config.serviceName?replace("-","/")}/</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/table',
+      '<#if config.serviceName?? && config.serviceName != "">${config.serviceName?replace("-","/")}/</#if><#if config.controllerPath?? && config.controllerPath != "">${config.controllerPath?replace("/","","f")}<#else>/${table.entityPath}</#if>/${entity}Table',
       2,
       <#if vueTablePath?? && vueTablePath != "">1<#else>0</#if>,
       1,

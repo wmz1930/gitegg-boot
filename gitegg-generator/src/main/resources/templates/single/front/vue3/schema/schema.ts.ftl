@@ -4,7 +4,14 @@ import { FormSchema } from '/@/components/Table';
 import {<#if (hasDict?? && hasDict == true) && (dictCodeList?exists && dictCodeList?size gt 0)> renderDict,</#if> renderStatusSwitch } from '/@/utils/gitegg/formUtils';
 </#if>
 <#if (hasStatus?? && hasStatus == true) || (checkExist?? && checkExist == true)>
-import { <#if hasStatus?? && hasStatus == true>update${entity}Status,</#if> <#if checkExist?? && checkExist == true>check${entity}Exist</#if> } from '/@/api/${vueJsPath}';
+import {
+<#if hasStatus?? && hasStatus == true>
+  update${entity}Status,
+</#if>
+<#if checkExist?? && checkExist == true>
+  check${entity}Exist,
+</#if>
+} from '/@/api/${vueJsPath}';
 </#if>
 <#if (hasDict?? && hasDict == true) && (dictCodeList?exists && dictCodeList?size gt 0)>
 import { getDictBusinessCache } from '/@/utils/gitegg/dictUtils';
@@ -17,6 +24,7 @@ import { level } from 'province-city-china/data';
 import { ${value.apiMethod} } from '${value.apiPath}';
 </#list>
 </#if>
+import dayjs from 'dayjs';
 
 <#-- ----------  BEGIN 数据表格Column定义  ---------->
 // 数据表格Column定义
@@ -37,7 +45,7 @@ export const columns: BasicColumn[] = [
     },
 <#elseif field.dictCode?? && field.dictCode != "API_DICT" >
     customRender: ({ text }) => {
-      return renderDict(text, '${dictCode}', false, false);
+      return renderDict(text, '${field.dictCode}', false, false);
     },
 </#if>
 <#-- ----------  END 是否进行状态处理  ---------->
@@ -151,7 +159,9 @@ export const searchFormSchema: FormSchema[] = [
 </#if>
       labelField: '${apiMap[field.apiId?string].labelField}',
       valueField: '${apiMap[field.apiId?string].valueField}',
-<#if field.controlType == "SELECT_MULTI">      mode: 'multiple',</#if>
+<#if field.controlType == "SELECT_MULTI">
+    mode: 'multiple',
+</#if>
     },
 <#else>
     componentProps: {
@@ -160,23 +170,25 @@ export const searchFormSchema: FormSchema[] = [
       resultField: 'dictList',
       labelField: 'dictName',
       valueField: 'dictCode',
-<#if field.controlType == "SELECT_MULTI">      mode: 'multiple',</#if>
+<#if field.controlType == "SELECT_MULTI">
+    mode: 'multiple',
+</#if>
     },
 </#if>
 <#-- END Select Radio end 查询时，Radio、CheckBox、Switch全部转换为下拉框 -->
 <#elseif field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
     component: 'DatePicker',
     componentProps: {
-     showTime: {
-       defaultValue: dayjs().startOf('day'),
-     },
-     showNow: false,
+      showTime: {
+        defaultValue: dayjs().startOf('day'),
+      },
+      showNow: false,
 <#if field.controlType == "DTAE_PICKER">
-     format: 'YYYY-MM-DD',
+      format: 'YYYY-MM-DD',
 <#else>
-     format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'YYYY-MM-DD HH:mm:ss',
 </#if>
-     style: 'width:100%;',
+      style: 'width:100%;',
     },
 <#elseif field.controlType == "TIME_PICKER">
     component: 'TimePicker',
@@ -342,7 +354,9 @@ export const formSchema: FormSchema[] = [
 </#if>
       labelField: '${apiMap[field.apiId?string].labelField}',
       valueField: '${apiMap[field.apiId?string].valueField}',
-<#if field.controlType == "SELECT_MULTI">      mode: 'multiple',</#if>
+<#if field.controlType == "SELECT_MULTI">
+    mode: 'multiple',
+</#if>
     },
 <#else>
     componentProps: {
@@ -351,23 +365,25 @@ export const formSchema: FormSchema[] = [
       resultField: 'dictList',
       labelField: 'dictName',
       valueField: 'dictCode',
-<#if field.controlType == "SELECT_MULTI">      mode: 'multiple',</#if>
+<#if field.controlType == "SELECT_MULTI">
+    mode: 'multiple',
+</#if>
     },
 </#if>
 <#-- END Select Radio  -->
 <#elseif field.controlType == "DTAE_PICKER" || field.controlType == "DTAE_TIME_PICKER">
     component: 'DatePicker',
     componentProps: {
-     showTime: {
-       defaultValue: dayjs().startOf('day'),
-     },
-     showNow: false,
+      showTime: {
+        defaultValue: dayjs().startOf('day'),
+      },
+      showNow: false,
 <#if field.controlType == "DTAE_PICKER">
-     format: 'YYYY-MM-DD',
+      format: 'YYYY-MM-DD',
 <#else>
-     format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'YYYY-MM-DD HH:mm:ss',
 </#if>
-     style: 'width:100%;',
+      style: 'width:100%;',
     },
 <#elseif field.controlType == "TIME_PICKER">
     component: 'TimePicker',

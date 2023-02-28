@@ -578,7 +578,7 @@ public class EngineServiceImpl implements IEngineService {
             // vue and js
             String vueFile = vueFileEntity + CodeGeneratorConstant.TABLE_VUE;
     
-            String dataJsName = StrUtil.toSymbolCase(vueFileEntity, StrUtil.C_DOT);
+            String dataJsName = StrUtil.toSymbolCase(vueFileEntity, StrUtil.C_UNDERLINE);
             // VUE3使用ts，VUE2使用js
             String jsFile = dataJsName
                     + (CodeGeneratorConstant.VUE3.equals(config.getFrontType()) ? CodeGeneratorConstant.TS : CodeGeneratorConstant.JS);

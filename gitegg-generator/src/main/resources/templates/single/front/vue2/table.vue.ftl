@@ -195,6 +195,7 @@
       :rowSelection="{ selectedRowKeys: this.selectedRowKeys, onChange: this.onSelectChange }"
     >
 <#-- ----------  所有的字典类型 设置Filter  ---------->
+<#if dictSelect?? && dictSelect == true && dictCodeFields??>
 <#list dictCodeFields as field>
     <#if field??>
       <span slot="${field.entityName}Slot" slot-scope="text, record">
@@ -202,6 +203,7 @@
       </span>
     </#if>
 </#list>
+</#if>
 <#------------  END 所有的字典类型 设置Filter  ---------->
       <span slot="createTime" slot-scope="text, record">
         <span>{{ record.createTime | moment }}</span>
@@ -447,13 +449,14 @@
     <#if config.importFlag == true || config.exportFlag == true>
     import { handleDownloadBlod } from '@/utils/util'
     </#if>
-    <#if dictSelect?? && dictSelect == true>
+    <#if dictSelect?? && dictSelect == true && dictCodeFields??>
     import { batchListDictBusiness } from '@/api/system/base/dictBusiness'
     let vm = {}
     </#if>
     export default {
         name: '${entity}Table',
         components: { moment, STable<#if uploadFile?? && uploadFile == true>, UploadFile</#if><#if uploadImg?? && uploadImg == true>, UploadImage</#if> },
+        <#if dictSelect?? && dictSelect == true && dictCodeFields??>
         filters: {
             <#-- ----------  所有的字典类型 字段循环遍历  ---------->
             <#list dictCodeFields as field>
@@ -466,8 +469,9 @@
             </#list>
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
         },
+        </#if>
         data () {
-            <#if dictSelect?? && dictSelect == true>
+            <#if dictSelect?? && dictSelect == true && dictCodeFields??>
             vm = this
             </#if>
             <#if checkExist?? && checkExist == true>
@@ -515,6 +519,7 @@
                     beginDateTime: '',
                     endDateTime: ''
                 },
+                <#if dictSelect?? && dictSelect == true && dictCodeFields??>
                 <#-- ----------  所有的字典类型 字段循环遍历  ---------->
                 <#list dictCodeFields as field>
                 <#if field??>
@@ -526,6 +531,7 @@
                 </#if>
                 </#list>
                 <#------------  END 所有的字典类型 字段循环遍历  ---------->
+                </#if>
                 dialogFormVisible: false,
                 dialogStatus: '',
                 textMap: {
@@ -618,7 +624,7 @@
         created () {
              const that = this
             <#------------  END 所有的字典类型 字段循环遍历  ---------->
-            <#if dictSelect?? && dictSelect == true>
+            <#if dictSelect?? && dictSelect == true && dictCodeFields??>
             const dictList = [<#list dictCodeFields as field><#if field??>that.${field.entityName}Dict<#if field?has_next>, </#if></#if></#list>]
             const dictCodeList = dictList.map(function (n) {
                 return n.dictCode
@@ -680,7 +686,7 @@
             },
           </#if>
           <#-- ----------  所有的字典类型 字段循环遍历  ---------->
-          <#if dictSelect?? && dictSelect == true>
+          <#if dictSelect?? && dictSelect == true && dictCodeFields??>
             async getBatchDataDictList (dictParams) {
                 const that = this
                 let result = {}

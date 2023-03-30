@@ -409,7 +409,7 @@ public class EngineServiceImpl implements IEngineService {
             List<FieldDTO> dictFieldDTOS = dictCodeFieldDTOS.stream().filter(f-> !StringUtils.isEmpty(f.getDictCode()) && !f.getDictCode().equals("API_DICT")).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(dictFieldDTOS))
             {
-                customMap.put(GitEggCodeGeneratorConstant.DICT_CODE_FIELDS,new ArrayList<>());
+                customMap.put(GitEggCodeGeneratorConstant.DICT_CODE_FIELDS, dictFieldDTOS);
                 customMap.put(CodeGeneratorConstant.HAS_DICT, true);
                 List<String> dictCodes = dictFieldDTOS.stream().map(FieldDTO::getDictCode).distinct().collect(Collectors.toList());
                 customMap.put(CodeGeneratorConstant.DICT_CODE_LIST, dictCodes);
@@ -601,16 +601,19 @@ public class EngineServiceImpl implements IEngineService {
                 customFileMap.put(vueEditFile, frontFtlBasePath + "/" + CodeGeneratorConstant.TABLE + CustomFileEnum.VUE.path);
                 customFilePath.put(vueEditFile, vuePath);
             }
-            
-            // tree_table/table都要用到table模板，所以这里需要做转换
-            customFileMap.put(vueFile, frontFtlBasePath + "/" +
-                    (CodeGeneratorConstant.TREE_TABLE.equals(tableShowType) ? CodeGeneratorConstant.TABLE : tableShowType) + CustomFileEnum.VUE.path);
+
+
+            customFileMap.put(vueFile, frontFtlBasePath + "/" + tableShowType+ CustomFileEnum.VUE.path);
             customFileMap.put(jsFile,  frontFtlBasePath + "/api" + (CodeGeneratorConstant.VUE3.equals(config.getFrontType()) ? CustomFileEnum.TS.path : CustomFileEnum.JS.path));
-            
-        
+
             // 如果是vue3，那么需要增加form.vue.ftl和schema.ts.ftl
             if (CodeGeneratorConstant.VUE3.equals(config.getFrontType()))
             {
+                // vue3可以和table模板共用
+                // tree_table/table都要用到table模板，所以这里需要做转换
+                customFileMap.put(vueFile, frontFtlBasePath + "/" +
+                        (CodeGeneratorConstant.TREE_TABLE.equals(tableShowType) ? CodeGeneratorConstant.TABLE : tableShowType) + CustomFileEnum.VUE.path);
+
                 String dataTsName = dataJsName + ".data";
                 customMap.put(CodeGeneratorConstant.DATA_TS_NAME, dataTsName);
                 String vueFormFile = vueFileEntity + config.getFormType().replaceAll("Tab", "Detail") + CodeGeneratorConstant.FORM_VUE;

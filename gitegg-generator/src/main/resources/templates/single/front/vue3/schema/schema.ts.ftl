@@ -1,7 +1,12 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-<#if (hasStatus?? && hasStatus == true)>
-import {<#if (hasDict?? && hasDict == true) && (dictCodeList?exists && dictCodeList?size gt 0)> renderDict,</#if> renderStatusSwitch } from '/@/utils/gitegg/formUtils';
+<#list fields as field>
+    <#if (checkExist?? && checkExist == true) && !(field.min?? || field.max?? || field.maxLength?? || field.minLength?? || field.validateValue?? || field.validateRegular??)>
+        <#assign hasValidate= true/>
+    </#if>
+</#list>
+<#if (hasStatus?? && hasStatus == true) || ((hasDict?? && hasDict == true) && (dictCodeList?exists && dictCodeList?size gt 0)) || (checkExist?? && checkExist == true)>
+import {<#if (hasDict?? && hasDict == true) && (dictCodeList?exists && dictCodeList?size gt 0)> renderDict,</#if><#if (hasStatus?? && hasStatus == true)> renderStatusSwitch</#if><#if (hasValidate?? && hasValidate == true)> renderCheckExistRules</#if> } from '/@/utils/gitegg/formUtils';
 </#if>
 <#if (hasStatus?? && hasStatus == true) || (checkExist?? && checkExist == true)>
 import {
@@ -75,7 +80,7 @@ export const searchFormSchema: FormSchema[] = [
 <#elseif field.controlType == "API_TREE">
     component: 'ApiTree',
 </#if>
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId?? >
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
 <#if apiMap[field.apiId?string].apiParams?? && apiMap[field.apiId?string].apiParams != "" >
@@ -112,7 +117,7 @@ export const searchFormSchema: FormSchema[] = [
 </#if>
 <#elseif field.controlType == "CASCADER">
     component: 'ApiCascader',
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId??>
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
       apiParamKey: 'parentId',
@@ -150,7 +155,7 @@ export const searchFormSchema: FormSchema[] = [
 <#-- BEGIN Select Radio start 查询时，Radio、CheckBox、Switch全部转换为下拉框-->
 <#elseif field.controlType == "SELECT" || field.controlType == "SELECT_MULTI" || field.controlType == "RADIO" || field.controlType == "SWITCH" || field.controlType == "CHECKBOX">
     component: 'ApiSelect',
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId?? >
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
       resultField: 'list',
@@ -269,7 +274,7 @@ export const formSchema: FormSchema[] = [
 <#elseif field.controlType == "API_TREE">
     component: 'ApiTree',
 </#if>
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId?? >
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
 <#if apiMap[field.apiId?string].apiParams?? && apiMap[field.apiId?string].apiParams != "" >
@@ -306,7 +311,7 @@ export const formSchema: FormSchema[] = [
 </#if>
 <#elseif field.controlType == "CASCADER">
     component: 'ApiCascader',
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId?? >
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
       apiParamKey: 'parentId',
@@ -345,7 +350,7 @@ export const formSchema: FormSchema[] = [
 <#elseif field.controlType == "SELECT" || field.controlType == "SELECT_MULTI" || field.controlType == "RADIO">
 <#if field.controlType == "SELECT" || field.controlType == "SELECT_MULTI">    component: 'ApiSelect',</#if>
 <#if field.controlType == "RADIO">    component: 'ApiRadioGroup',</#if>
-<#if field.dictCode?? && field.dictCode == "API_DICT" >
+<#if field.dictCode?? && field.dictCode == "API_DICT" && field.apiId??>
     componentProps: {
       api: ${apiMap[field.apiId?string].apiMethod},
       resultField: 'list',
@@ -413,11 +418,27 @@ export const formSchema: FormSchema[] = [
 <#-- ----------  START 是否进行状态处理  ---------->
 <#if field?? && field.fieldUnique == true>
     dynamicRules: ({ model }) => {
+  <#if (field.min?? || field.max?? || field.maxLength?? || field.minLength?? || field.validateValue?? || field.validateRegular??)>
       return [
-        {
-          required: true,
-          message: '请输入${field.comment}',
-        },
+    <#if field.required == true>
+        { required: true, message: '${field.comment}不能为空！' },
+    </#if>
+    <#if field.min?? || field.max??>
+        <#if  field.controlType != "DTAE_TIME_PICKER" && field.controlType != "DTAE_PICKER" && field.controlType != "TIME_PICKER" && field.controlType != "PROVINCE_CITY_AREA">
+        { <#if field.min??>min: ${field.min}, </#if><#if field.max??>max: ${field.max}</#if>, message: '数值大小在<#if field.min??> ${field.min} 到</#if><#if field.max??> ${field.max}</#if> 之间', trigger: 'blur' },
+        </#if>
+    </#if>
+    <#if field.maxLength?? || field.minLength??>
+        <#if field.controlType != "DTAE_TIME_PICKER" && field.controlType != "DTAE_PICKER" && field.controlType != "TIME_PICKER" && field.controlType != "PROVINCE_CITY_AREA">
+        { <#if field.minLength??>min: ${field.minLength}, </#if><#if field.maxLength??>max: ${field.maxLength}</#if>, message: '长度在<#if field.minLength??> ${field.minLength} 到</#if><#if field.maxLength??> ${field.maxLength}</#if> 个字符', trigger: 'blur' },
+        </#if>
+    </#if>
+    <#if field.validateValue??>
+        { pattern: /${field.validateValue?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
+    <#if field.validateRegular??>
+        { pattern: /${field.validateRegular?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
         {
           trigger: 'blur',
           message: '${field.comment}已存在',
@@ -444,6 +465,44 @@ export const formSchema: FormSchema[] = [
         },
       ];
     },
+  <#else>
+      return renderCheckExistRules(model, check${entity}Exist, '${field.fieldName}', '${field.comment}');
+    },
+  </#if>
+<#elseif field?? && (field.controlType != "DTAE_TIME_PICKER" && field.controlType != "DTAE_PICKER" && field.controlType != "TIME_PICKER" && field.controlType != "PROVINCE_CITY_AREA") && (field.required == true || field.min?? || field.max?? || field.maxLength?? || field.minLength?? || field.validateValue?? || field.validateRegular??)>
+    rules: [
+    <#if field.required == true>
+      { required: true, message: '${field.comment}不能为空！' },
+    </#if>
+    <#if field.min?? || field.max??>
+      <#if field.controlType != "DTAE_TIME_PICKER" && field.controlType != "DTAE_PICKER" && field.controlType != "TIME_PICKER" && field.controlType != "PROVINCE_CITY_AREA">
+      { <#if field.min??>min: ${field.min}, </#if><#if field.max??>max: ${field.max}</#if>, message: '数值大小在<#if field.min??> ${field.min} 到</#if><#if field.max??> ${field.max}</#if> 之间', trigger: 'blur' },
+      </#if>
+    </#if>
+    <#if field.maxLength?? || field.minLength??>
+      <#if field.controlType != "DTAE_TIME_PICKER" && field.controlType != "DTAE_PICKER" && field.controlType != "TIME_PICKER" && field.controlType != "PROVINCE_CITY_AREA">
+      { <#if field.minLength??>min: ${field.minLength}, </#if><#if field.maxLength??>max: ${field.maxLength}</#if>, message: '长度在<#if field.minLength??> ${field.minLength} 到</#if><#if field.maxLength??> ${field.maxLength}</#if> 个字符', trigger: 'blur' },
+      </#if>
+    </#if>
+    <#if field.validateValue??>
+      { pattern: /${field.validateValue?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
+    <#if field.validateRegular??>
+      { pattern: /${field.validateRegular?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
+    ],
+<#elseif field?? && (field.controlType == "DTAE_TIME_PICKER" || field.controlType == "DTAE_PICKER" || field.controlType == "TIME_PICKER" || field.controlType == "PROVINCE_CITY_AREA") && (field.required == true || field.validateValue?? || field.validateRegular??)>
+    rules: [
+    <#if field.required == true>
+        { required: true, message: '${field.comment}不能为空！' },
+    </#if>
+    <#if field.validateValue??>
+        { pattern: /${field.validateValue?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
+    <#if field.validateRegular??>
+        { pattern: /${field.validateRegular?replace("\\\\","\\")}/, message: '${field.comment}格式错误' },
+    </#if>
+    ],
 </#if>
 <#-- ----------  END 是否进行状态处理  ---------->
     colProps: { span: ${config.formItemCol} },

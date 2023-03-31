@@ -1,5 +1,6 @@
 package com.gitegg.boot.generator.engine.service.impl;
 
+import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -541,11 +542,14 @@ public class EngineServiceImpl implements IEngineService {
             {
                 servicePath = servicePath + File.separator + serviceName;
             }
-        
-            if (!StringUtils.isEmpty(frontCodeDir))
-            {
-                servicePath = frontCodeDir + servicePath ;
-            }
+        } else if (!StringUtils.isEmpty(config.getControllerPath()))
+        {
+            servicePath = config.getControllerPath().replaceFirst(StrPool.SLASH, StrUtil.EMPTY).replace(StrPool.SLASH, File.separator);
+        }
+    
+        if (!StringUtils.isEmpty(frontCodeDir))
+        {
+            servicePath = frontCodeDir + File.separator + servicePath ;
         }
     
         //判断是否生成后端代码
@@ -582,14 +586,19 @@ public class EngineServiceImpl implements IEngineService {
             // VUE3使用ts，VUE2使用js
             String jsFile = dataJsName
                     + (CodeGeneratorConstant.VUE3.equals(config.getFrontType()) ? CodeGeneratorConstant.TS : CodeGeneratorConstant.JS);
+            String vueFilePath = (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+            if (!StringUtils.isEmpty(config.getControllerPath()))
+            {
+                vueFilePath = servicePath;
+            }
         
-            String vuePath = finalFrontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
-            String jsPath = finalFrontCodePath + GitEggCodeGeneratorConstant.JS_PATH + (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath + File.separator)) + config.getModuleCode();
+            String vuePath = finalFrontCodePath + GitEggCodeGeneratorConstant.VUE_PATH + vueFilePath;
+            String jsPath = finalFrontCodePath + GitEggCodeGeneratorConstant.JS_PATH + vueFilePath;
             customFilePath.put(vueFile, vuePath);
             customFilePath.put(jsFile, jsPath);
         
-            customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFile);
-            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (StringUtils.isEmpty(servicePath)?StrUtil.EMPTY:(servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH)) + config.getModuleCode() + StrUtil.SLASH + dataJsName);
+            customMap.put(GitEggCodeGeneratorConstant.VUE_TABLE_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH)  + StrUtil.SLASH + vueFile);
+            customMap.put(GitEggCodeGeneratorConstant.VUE_JS_PATH, (vueFilePath.replace(File.separator, StrUtil.SLASH)) + StrUtil.SLASH + dataJsName);
         
             // 生成前端页面 VUE AND JS/TS
             String frontFtlBasePath = EngineUtils.getFrontFtlPath(config.getTableType(), config.getFrontType());
@@ -618,8 +627,8 @@ public class EngineServiceImpl implements IEngineService {
                 customMap.put(CodeGeneratorConstant.DATA_TS_NAME, dataTsName);
                 String vueFormFile = vueFileEntity + config.getFormType().replaceAll("Tab", "Detail") + CodeGeneratorConstant.FORM_VUE;
                 String tsFile = dataTsName + CodeGeneratorConstant.TS;
-                customMap.put(GitEggCodeGeneratorConstant.VUE_FORM_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + vueFormFile);
-                customMap.put(GitEggCodeGeneratorConstant.VUE_TS_PATH, servicePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + config.getModuleCode() + StrUtil.SLASH + tsFile);
+                customMap.put(GitEggCodeGeneratorConstant.VUE_FORM_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + vueFormFile);
+                customMap.put(GitEggCodeGeneratorConstant.VUE_TS_PATH, vueFilePath.replace(File.separator, StrUtil.SLASH) + StrUtil.SLASH + tsFile);
             
                 customFileMap.put(vueFormFile, frontFtlBasePath + "/form/" + config.getFormType().replaceAll("Modal","").replaceAll("Drawer","")  + CustomFileEnum.VUE_FORM.path);
                 customFileMap.put(tsFile,  frontFtlBasePath + "/schema" + CustomFileEnum.SCHEMA_TS.path);

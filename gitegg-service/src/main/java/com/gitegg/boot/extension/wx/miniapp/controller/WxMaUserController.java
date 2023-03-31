@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Api(value = "WxMaUserController | 微信小程序账户接口", tags = {"微信小程序账户接口"})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@RequestMapping("/wx/user/{appid}")
+@RequestMapping("/extension/wx/user/{appid}")
 public class WxMaUserController {
     
     private final WxMaService wxMaService;

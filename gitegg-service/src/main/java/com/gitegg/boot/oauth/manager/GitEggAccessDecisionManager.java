@@ -2,6 +2,7 @@ package com.gitegg.boot.oauth.manager;
 
 import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.TokenConstant;
+import com.gitegg.platform.oauth2.props.AuthUrlWhiteListProperties;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author GitEgg
@@ -32,6 +38,8 @@ import java.util.Iterator;
 @Component
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class GitEggAccessDecisionManager implements AccessDecisionManager {
+    
+    private final AuthUrlWhiteListProperties authUrlWhiteListProperties;
 
     private final RedisTemplate redisTemplate;
 
@@ -83,8 +91,20 @@ public class GitEggAccessDecisionManager implements AccessDecisionManager {
             log.info("[决策管理器]:请求 {} 无需权限", ((FilterInvocation) resource).getRequestUrl());
             return;
         }
-
-        authentication.isAuthenticated();
+    
+        // 只要登录就能够访问的url
+        if(authentication.isAuthenticated())
+        {
+            PathMatcher pathMatcher = new AntPathMatcher();
+            // 只要登录就能够访问的url
+            List<String> authUrls = authUrlWhiteListProperties.getAuthUrls();
+            List<String> permitAllUrls = Stream.of(authUrls).flatMap(Collection::stream).collect(Collectors.toList());
+            String urls = permitAllUrls.stream().filter(url -> pathMatcher.match(url, ((FilterInvocation) resource).getRequest().getRequestURI())).findAny().orElse(null);
+            // 只要登录就能够访问的url直接放行
+            if (null != urls) {
+                return;
+            }
+        }
 
         log.info("[决策管理器]:请求 {} 须要的权限 - {}", ((FilterInvocation) resource).getRequestUrl(), configAttributes);
         // 判断用户所拥有的权限，是否符合对应的Url权限，用户权限是实现 UserDetailsService#loadUserByUsername 返回用户所对应的权限

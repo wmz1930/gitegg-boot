@@ -137,11 +137,12 @@
 </#if>
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import {
-<#if tableShowType?? && tableShowType == "tree_table">
-    get${entity}Tree,
-<#else>
+<#--<#if tableShowType?? && tableShowType == "tree_table">-->
+<#--    get${entity}Tree,-->
+<#--<#else>-->
+<#--    get${entity}List,-->
+<#--</#if>-->
     get${entity}List,
-</#if>
     delete${entity},
     batchDelete${entity},
 <#if config.exportFlag == true>

@@ -36,6 +36,12 @@ public class QueryRoleDTO extends BaseEntity {
     @ApiModelProperty(value = "角色级别")
     private Integer roleLevel;
 
+    @ApiModelProperty(value = "高于某个级别")
+    private Integer roleHighLevel;
+
+    @ApiModelProperty(value = "低于某个级别")
+    private Integer roleLowerLevel;
+
     @ApiModelProperty(value = "1有效，0禁用")
     private Integer roleStatus;
 

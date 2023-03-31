@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping("/wx/media/{appid}")
+@RequestMapping("/extension/wx/media/{appid}")
 public class WxMaMediaController {
     private final WxMaService wxMaService;
 

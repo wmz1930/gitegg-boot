@@ -168,8 +168,22 @@ public class RoleController {
      */
     @GetMapping(value = "/all")
     @ApiOperation(value = "查询所有角色列表")
-    public Result<List<Role>> queryAll() {
-        List<Role> result = roleService.list();
+    public Result<List<Role>> queryAll(QueryRoleDTO queryRoleDTO) {
+        // 数字越小，级别越高
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        Integer roleLowerLevel= queryRoleDTO.getRoleLowerLevel();
+        if (null != roleLowerLevel)
+        {
+            queryWrapper.le(Role::getRoleLevel, roleLowerLevel);
+        }
+
+        Integer roleHighLevel= queryRoleDTO.getRoleHighLevel();
+        if (null != roleHighLevel)
+        {
+            queryWrapper.ge(Role::getRoleLevel, roleHighLevel);
+        }
+
+        List<Role> result = roleService.list(queryWrapper);
         return Result.data(result);
     }
 

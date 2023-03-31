@@ -42,7 +42,7 @@
                 </otherwise>
             </choose>
         </if>
-        ORDER BY id
+        ORDER BY dict_order,id
     </select>
 
     <select id="selectGeneratorDictList" resultType="com.gitegg.boot.generator.dict.dto.GeneratorDictDTO"
@@ -68,7 +68,7 @@
                 AND dict_status = #{dict.dictStatus}
             </if>
         </trim>
-        ORDER BY create_time DESC
+        ORDER BY dict_order,create_time
     </select>
 
 </mapper>

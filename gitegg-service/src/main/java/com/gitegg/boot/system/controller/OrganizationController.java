@@ -1,5 +1,6 @@
 package com.gitegg.boot.system.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gitegg.boot.system.dto.CreateOrganizationDTO;
 import com.gitegg.boot.system.dto.QueryOrganizationDTO;
@@ -77,7 +78,7 @@ public class OrganizationController {
         if (null != org && !CollectionUtils.isEmpty(org.getAreas())) {
             orgEntity.setProvince(org.getAreas().get(GitEggConstant.Address.PROVINCE));
             orgEntity.setCity(org.getAreas().get(GitEggConstant.Address.CITY));
-            orgEntity.setArea(org.getAreas().get(GitEggConstant.Address.AREA));
+            orgEntity.setArea(org.getAreas().size() > GitEggConstant.Number.TWO ? org.getAreas().get(GitEggConstant.Address.AREA) : StrUtil.SPACE);
         }
         boolean result = organizationService.createOrganization(orgEntity);
         if (result) {
@@ -97,7 +98,7 @@ public class OrganizationController {
         if (null != org && !CollectionUtils.isEmpty(org.getAreas())) {
             orgEntity.setProvince(org.getAreas().get(GitEggConstant.Address.PROVINCE));
             orgEntity.setCity(org.getAreas().get(GitEggConstant.Address.CITY));
-            orgEntity.setArea(org.getAreas().get(GitEggConstant.Address.AREA));
+            orgEntity.setArea(org.getAreas().size() > GitEggConstant.Number.TWO ? org.getAreas().get(GitEggConstant.Address.AREA) : StrUtil.SPACE);
         }
         boolean result = organizationService.updateOrganization(orgEntity);
         if (result) {

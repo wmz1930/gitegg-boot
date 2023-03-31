@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -132,10 +129,10 @@ public class GeneratorDictServiceImpl extends ServiceImpl<GeneratorDictMapper, G
         List<GeneratorDict> dictList = null;
         if (null != generatorDict) {
             QueryWrapper<GeneratorDict> ewBusiness = new QueryWrapper<>();
-            ewBusiness.eq("dict_status", "1").eq("parent_id", generatorDict.getId());
+            ewBusiness.eq("dict_status", "1").eq("parent_id", generatorDict.getId())
+                    .orderByAsc(Arrays.asList("dict_order","id"));
             dictList = list(ewBusiness);
         }
-
         return dictList;
     }
 

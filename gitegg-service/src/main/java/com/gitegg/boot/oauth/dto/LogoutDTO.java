@@ -1,4 +1,4 @@
-package com.gitegg.oauth.dto;
+package com.gitegg.boot.oauth.dto;
 
 import lombok.Data;
 

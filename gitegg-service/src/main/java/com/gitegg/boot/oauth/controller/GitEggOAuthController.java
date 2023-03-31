@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-import com.gitegg.oauth.dto.LogoutDTO;
+import com.gitegg.boot.oauth.dto.LogoutDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.KeyPair;

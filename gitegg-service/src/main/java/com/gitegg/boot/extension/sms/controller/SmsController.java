@@ -1,4 +1,4 @@
-package com.gitegg.boot.extension.sms.contorller;
+package com.gitegg.boot.extension.sms.controller;
 
 
 import com.anji.captcha.service.CaptchaService;

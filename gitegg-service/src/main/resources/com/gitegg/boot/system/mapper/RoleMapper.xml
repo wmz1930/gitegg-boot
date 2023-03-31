@@ -56,7 +56,7 @@
 		<if test="role.dataPermissionType != null and role.dataPermissionType != ''">
 			AND data_permission_type = #{role.dataPermissionType}
 		</if>
-		ORDER BY id DESC
+		ORDER BY role_level DESC,id DESC
 	</select>
 
 </mapper>

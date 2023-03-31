@@ -52,7 +52,7 @@ logging:
   config: classpath:config/log4j2.xml
   file:
     # 配置日志的路径，包含 spring.application.name  Linux:  /var/log/${spring.application.name}
-    path: D:\\log4j2_nacos\\${spring.application.name}
+    path: /log4j2_nacos/${spring.application.name}
 spring:
   autoconfigure:
     # 动态数据源排除默认配置
@@ -95,6 +95,21 @@ spring:
         connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;
         # 合并多个DruidDataSource的监控数据
         useGlobalDataSourceStat: true
+        # 配置监控服务器
+        stat-view-servlet:
+          login-username: admin
+          login-password: 123456
+          reset-enable: false
+          url-pattern: /druid/*
+          # 添加IP白名单
+          #allow:
+          # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+          #deny:
+        web-stat-filter:
+          # 添加过滤规则
+          url-pattern: /*
+          # 忽略过滤格式
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
       datasource:
         master:
           url: jdbc:mysql://127.0.0.1/gitegg_boot?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
@@ -376,7 +391,6 @@ oauth-list:
     - "/oauth/captcha/check"
     - "/oauth/captcha/image"
     - "/oauth/sms/captcha/send"
-    - "/extension/base/dict/list/{dictCode}"
     - "/oauth/social/{type}/callback"
     - "/oauth/social/login/{type}"
     - "/oauth/social/bind/mobile"
@@ -384,8 +398,9 @@ oauth-list:
     - "/extension/sms/code/send"
     - "/extension/sms/check/code/pre"
     - "/extension/sms/check/code"
-    - "/extension/wechat/user/{appid}/login"
-    - "/extension/wechat/user/{appid}/info"
+    - "/extension/wx/user/{appid}/login"
+    - "/extension/wx/user/{appid}/info"
+    - "/extension/wx/user/{appid}/phone"
     - "/extension/batch/get/file/url"
     - "/system/account/register/sms/send"
     - "/system/account/register"
@@ -401,7 +416,11 @@ oauth-list:
     - "/system/account/avatar/update"
     - "/system/resource/user/menu"
     - "/system/resource/user/resource"
+    - "/system/organization/tree"
+    - "/base/dict/list/{dictCode}"
+    - "/base/dict/batch/query"
+    - "/base/business/dict/list/{dictCode}"
+    - "/base/business/dict/batch/query"
     - "/extension/dfs/query/default"
-    - "/extension/wx/user/{appid}/phone"
     - "/extension/wx/user/bind"
     - "/extension/wx/user/unbind"

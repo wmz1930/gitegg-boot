@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
  * GitEggBootApplication 启动类
  * @author GitEgg
  */
-@ComponentScan(basePackages = "com.gitegg")
+@ComponentScan(basePackages = {"com.gitegg"})
 @MapperScan(basePackages  = {"com.gitegg.**.mapper.**"})
 @SpringBootApplication
 public class GitEggBootApplication {

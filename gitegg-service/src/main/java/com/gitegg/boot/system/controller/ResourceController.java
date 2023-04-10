@@ -8,7 +8,9 @@ import com.gitegg.boot.system.dto.UpdateResourceDTO;
 import com.gitegg.boot.system.entity.Resource;
 import com.gitegg.boot.system.entity.User;
 import com.gitegg.boot.system.service.IResourceService;
+import com.gitegg.platform.base.annotation.auth.CurrentUser;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.domain.GitEggUser;
 import com.gitegg.platform.base.dto.CheckExistDTO;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import com.gitegg.platform.base.result.Result;
@@ -160,7 +162,7 @@ public class ResourceController {
      */
     @GetMapping("/user/menu")
     @ApiOperation(value = "登陆后获取个人权限资源")
-    public Result<List<Resource>> navMenu(@ApiIgnore User currentUser) {
+    public Result<List<Resource>> navMenu(@ApiIgnore @CurrentUser GitEggUser currentUser) {
         Long userId = currentUser.getId();
         List<Resource> resourceList = resourceService.queryMenuTreeByUserId(userId);
         return Result.data(resourceList);

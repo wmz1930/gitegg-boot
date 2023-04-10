@@ -176,7 +176,7 @@ public class ResourceController {
      */
     @GetMapping("/user/resource")
     @ApiOperation(value = "登陆后获取个人权限资源code")
-    public Result<List<Resource>> queryPermCode(@ApiIgnore User currentUser) {
+    public Result<List<Resource>> queryPermCode(@ApiIgnore @CurrentUser GitEggUser currentUser) {
         QueryUserResourceDTO queryUserResourceDTO = new QueryUserResourceDTO();
         queryUserResourceDTO.setUserId(currentUser.getId());
         List<Resource> resourceList = resourceService.queryResourceListByUserId(queryUserResourceDTO);

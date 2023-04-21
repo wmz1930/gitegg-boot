@@ -166,7 +166,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
 
   import { Dropdown } from '/@/components/Dropdown';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
 
 <#if config.importFlag == true || config.exportFlag == true>
   import { handleDownloadBlod } from '/@/utils/file/download';

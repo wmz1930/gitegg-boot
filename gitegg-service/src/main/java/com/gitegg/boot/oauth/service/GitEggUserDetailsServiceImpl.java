@@ -8,6 +8,7 @@ import com.gitegg.boot.system.entity.UserInfo;
 import com.gitegg.boot.system.service.IUserService;
 import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.GitEggConstant;
+import com.gitegg.platform.base.constant.TokenConstant;
 import com.gitegg.platform.base.domain.GitEggUser;
 import com.gitegg.platform.base.enums.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class GitEggUserDetailsServiceImpl implements UserDetailsService {
         // 通过手机号码登录
         if (!StringUtils.isEmpty(authGrantType) && AuthEnum.SMS_CAPTCHA.code.equals(authGrantType))
         {
-            String phone = request.getParameter(AuthConstant.PHONE_NUMBER);
+            String phone = request.getParameter(TokenConstant.PHONE_NUMBER);
             user.setMobile(phone);
             userInfo = userService.queryUserInfo(user);
         }

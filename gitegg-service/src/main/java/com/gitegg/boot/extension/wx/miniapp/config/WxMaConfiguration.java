@@ -12,6 +12,7 @@ import cn.hutool.core.text.StrPool;
 import com.gitegg.platform.base.constant.AuthConstant;
 import com.gitegg.platform.base.constant.GitEggConstant;
 import com.gitegg.platform.boot.util.GitEggAuthUtils;
+import com.gitegg.platform.wechat.miniapp.config.GitEggWxMaRedissonConfigImpl;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

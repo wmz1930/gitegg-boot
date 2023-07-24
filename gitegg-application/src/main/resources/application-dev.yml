@@ -112,7 +112,7 @@ spring:
           exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1/gitegg_boot?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://127.0.0.1/gitegg_boot_v1.0.6_2?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
           username: root
           password: root
   redis:

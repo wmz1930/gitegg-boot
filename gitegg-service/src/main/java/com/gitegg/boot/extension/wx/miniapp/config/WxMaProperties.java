@@ -16,6 +16,12 @@ public class WxMaProperties {
 
     @Data
     public static class Config {
+
+        /**
+         * 租户
+         */
+        private Long tenantId;
+
         /**
          * 设置微信小程序的appid
          */

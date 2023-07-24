@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaMessage;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
+import com.gitegg.boot.extension.wx.miniapp.service.IMiniappService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +21,12 @@ import java.util.Objects;
 @RequestMapping("/extension/wx/portal/{appid}")
 @Slf4j
 public class WxPortalController {
+
     private final WxMaService wxMaService;
+
     private final WxMaMessageRouter wxMaMessageRouter;
+
+    private final IMiniappService miniappService;
 
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String authGet(@PathVariable String appid,
@@ -36,7 +41,7 @@ public class WxPortalController {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
 
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
 
@@ -60,7 +65,7 @@ public class WxPortalController {
                 " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
             msgSignature, encryptType, signature, timestamp, nonce, requestBody);
 
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
 

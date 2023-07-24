@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -38,6 +39,13 @@ public class AuthGlobalFilter extends OncePerRequestFilter implements Ordered {
                                     FilterChain chain) throws ServletException, IOException {
 
         String tenantId = request.getHeader(AuthConstant.TENANT_ID);
+
+        // 如果请求头里没有租户id，那么从参数中取
+        if (StringUtils.isEmpty(tenantId))
+        {
+            tenantId = request.getParameter(AuthConstant.TENANT_ID);
+        }
+
         String token = request.getHeader(AuthConstant.JWT_TOKEN_HEADER);
         if (StrUtil.isEmpty(tenantId) && StrUtil.isEmpty(token)) {
             chain.doFilter(request, response);

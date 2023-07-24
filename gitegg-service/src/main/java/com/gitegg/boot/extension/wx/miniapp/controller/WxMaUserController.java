@@ -15,6 +15,7 @@ import com.gitegg.boot.extension.justauth.entity.JustAuthSocialUser;
 import com.gitegg.boot.extension.justauth.service.IJustAuthService;
 import com.gitegg.boot.extension.justauth.service.IJustAuthSocialService;
 import com.gitegg.boot.extension.justauth.service.IJustAuthSocialUserService;
+import com.gitegg.boot.extension.wx.miniapp.service.IMiniappService;
 import com.gitegg.boot.system.dto.CreateUserDTO;
 import com.gitegg.boot.system.entity.User;
 import com.gitegg.boot.system.service.IUserService;
@@ -73,6 +74,8 @@ public class WxMaUserController {
     private final RedisTemplate redisTemplate;
     
     private final IUserService userService;
+
+    private final IMiniappService miniappService;
     
     /**
      * 密码最大尝试次数
@@ -107,7 +110,7 @@ public class WxMaUserController {
             return Result.error("code 不能为空");
         }
 
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
     
@@ -156,6 +159,8 @@ public class WxMaUserController {
             // 将socialKey放入缓存，默认有效期2个小时，如果2个小时未完成验证，那么操作失效，重新获取，在system:socialLoginExpiration配置
             redisTemplate.opsForValue().set(AuthConstant.SOCIAL_VALIDATION_PREFIX + socialKey, String.valueOf(justAuthSocial.getId()), socialLoginExpiration,
                     TimeUnit.SECONDS);
+            log.info("微信小程序登录时，获取第三方登录用户id={},缓存socialKey={}", justAuthSocial.getId(), socialKey);
+
             String desSocialKey = des.encryptHex(socialKey);
             weChatMiniAppLoginDTO.setBindKey(desSocialKey);
             
@@ -173,7 +178,7 @@ public class WxMaUserController {
             }
             return Result.data(weChatMiniAppLoginDTO);
         } catch (WxErrorException e) {
-            log.error(e.getMessage(), e);
+            log.error("微信小程序登录失败：{}", e);
             return Result.error("小程序登录失败:" + e);
         } finally {
             WxMaConfigHolder.remove();//清理ThreadLocal
@@ -196,7 +201,7 @@ public class WxMaUserController {
     @GetMapping("/info")
     public Result<?> info(@PathVariable String appid, String socialKey,
                        String signature, String rawData, String encryptedData, String iv) {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
     
@@ -236,7 +241,7 @@ public class WxMaUserController {
     })
     @GetMapping("/phone")
     public Result<?> phone(@PathVariable String appid, String socialKey, String encryptedData, String iv) {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
         // 查询第三方用户信息
@@ -297,7 +302,7 @@ public class WxMaUserController {
     })
     @GetMapping("/bind")
     public Result<?> bind(@PathVariable String appid, @NotBlank String socialKey, @CurrentUser GitEggUser user) {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
         if (null == user || (null != user && null == user.getId())) {
@@ -322,7 +327,7 @@ public class WxMaUserController {
     @ApiOperation(value = "解绑当前登录账号")
     @GetMapping("/unbind")
     public Result<?> unbind(@PathVariable String appid, @CurrentUser GitEggUser user) {
-        if (!wxMaService.switchover(appid)) {
+        if (!miniappService.switchover(appid)) {
             throw new IllegalArgumentException(String.format("未找到对应appid=[%s]的配置，请核实！", appid));
         }
         if (null == user || (null != user && null == user.getId())) {
@@ -340,19 +345,23 @@ public class WxMaUserController {
             // 解密前端传来的socialId
             DES des = new DES(Mode.CTS, Padding.PKCS5Padding, secretKey.getBytes(), secretKeySalt.getBytes());
             String desSocialKey = des.decryptStr(socialKey);
-            
+
+            log.info("微信小程序授权登录desSocialKey={}", desSocialKey);
             // 将socialKey放入缓存，默认有效期2个小时，如果2个小时未完成验证，那么操作失效，重新获取，在system:socialLoginExpiration配置
             String desSocialId = (String)redisTemplate.opsForValue().get(AuthConstant.SOCIAL_VALIDATION_PREFIX + desSocialKey);
-            
+            log.info("微信小程序授权登录desSocialId={}", desSocialId);
+
             // 查询第三方用户信息
             justAuthSocial = justAuthService.querySocialInfo(Long.valueOf(desSocialId));
             if (null == justAuthSocial)
             {
+                log.error("微信小程序授权登录失败: 没有查询到第三方用户信息");
                 throw new BusinessException("未查询到第三方用户信息，请尝试重新进入小程序");
             }
             return justAuthSocial;
         } catch (Exception e) {
-            throw new BusinessException("未查询到第三方用户信息，请尝试重新进入小程序");
+            log.error("微信小程序授权登录失败: {}", e);
+            throw new BusinessException("微信小程序授权登录失败，请尝试重新进入小程序");
         }
     }
 

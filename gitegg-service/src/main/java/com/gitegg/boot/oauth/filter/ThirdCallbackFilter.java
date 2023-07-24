@@ -27,7 +27,7 @@ import java.text.ParseException;
  */
 @Slf4j
 @Component
-@WebFilter(urlPatterns={"/online/ansheng/callback/pay/notify"})
+@WebFilter(urlPatterns={"/callback"})
 public class ThirdCallbackFilter extends OncePerRequestFilter implements Ordered {
 
     /**
@@ -46,7 +46,7 @@ public class ThirdCallbackFilter extends OncePerRequestFilter implements Ordered
         // 考虑到回调的情况，如果tenantId为空，那么自动设置默认的TenantID
         // TODO 新增回调Filter，需要判断回调配置，如果第三方无法设置tenantId时，系统根据配置来设置租户id
         if (StrUtil.isEmpty(tenantId)) {
-            tenantId = "0";
+            tenantId = AuthConstant.DEFAULT_TENANT_ID.toString();
         }
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);

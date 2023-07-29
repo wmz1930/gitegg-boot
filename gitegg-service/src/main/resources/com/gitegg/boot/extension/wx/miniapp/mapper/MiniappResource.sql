@@ -1,0 +1,494 @@
+#菜单
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      0,
+      0,
+      '微信小程序',
+      'gitegg:service:extension:extension:wx:miniapp:table',
+      '2',
+      'jiaoseguanli',
+      'miniapp/table',
+      'system/extension/wx/miniapp/MiniappTable.vue',
+      2,
+      1,
+      1,
+      'miniappTable',
+      '1',
+      '微信小程序',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#查询数据列表
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      337,
+      0,
+      '获取微信小程序列表',
+      'gitegg:service:extension::extension:wx:miniapp:list',
+      '4',
+      'xitongrizhi',
+      'list',
+      '/extension/wx/miniapp/list',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '获取微信小程序列表数据',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#添加
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      337,
+      0,
+      '添加
+',
+      'gitegg:service:extension::extension:wx:miniapp:create',
+      '4',
+      'xitongrizhi',
+      'create',
+      '/extension/wx/miniapp/create',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '添加微信小程序',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#更新
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      337,
+      0,
+      '更新微信小程序',
+      'gitegg:service:extension::extension:wx:miniapp:update',
+      '4',
+      'xitongrizhi',
+      'update',
+      '/extension/wx/miniapp/update',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '更新微信小程序',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#删除
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+VALUES
+  (
+      337,
+      0,
+      '删除微信小程序',
+      'gitegg:service:extension::extension:wx:miniapp:delete',
+      '4',
+      'xitongrizhi',
+      'delete',
+      '/extension/wx/miniapp/delete/{miniappId}',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '删除微信小程序',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#批量删除
+INSERT INTO `t_sys_resource` (
+      `parent_id`,
+      `tenant_id`,
+      `resource_name`,
+      `resource_key`,
+      `resource_type`,
+      `resource_icon`,
+      `resource_path`,
+      `resource_url`,
+      `resource_level`,
+      `resource_show`,
+      `resource_cache`,
+      `resource_page_name`,
+      `resource_status`,
+      `comments`,
+      `create_time`,
+      `creator`,
+      `update_time`,
+      `operator`,
+      `del_flag`
+  )
+  VALUES
+  (
+      337,
+      0,
+      '批量删除微信小程序',
+      'gitegg:service:extension::extension:wx:miniapp:batch:delete',
+      '4',
+      'xitongrizhi',
+      'batch/delete',
+      '/extension/wx/miniapp/batch/delete',
+      2,
+      1,
+      1,
+      NULL,
+      '1',
+      '批量删除微信小程序',
+      NOW(),
+      1,
+      NOW(),
+      1,
+      '0'
+  );
+
+#更新状态
+INSERT INTO `t_sys_resource` (
+   `parent_id`,
+   `tenant_id`,
+   `resource_name`,
+   `resource_key`,
+   `resource_type`,
+   `resource_icon`,
+   `resource_path`,
+   `resource_url`,
+   `resource_level`,
+   `resource_show`,
+   `resource_cache`,
+   `resource_page_name`,
+   `resource_status`,
+   `comments`,
+   `create_time`,
+   `creator`,
+   `update_time`,
+   `operator`,
+   `del_flag`
+)
+VALUES
+(
+   337,
+   0,
+   '微信小程序状态修改',
+   'gitegg:service:extension::extension:wx:miniapp:status',
+   '4',
+   'xitongrizhi',
+   'status',
+   '/extension/wx/miniapp/status/{miniappId}/{miniappStatus}',
+   2,
+   1,
+   1,
+   NULL,
+   '1',
+   '批量删除微信小程序',
+   NOW(),
+   1,
+   NOW(),
+   1,
+   '0'
+);
+
+#校验是否存在
+INSERT INTO `t_sys_resource` (
+   `parent_id`,
+   `tenant_id`,
+   `resource_name`,
+   `resource_key`,
+   `resource_type`,
+   `resource_icon`,
+   `resource_path`,
+   `resource_url`,
+   `resource_level`,
+   `resource_show`,
+   `resource_cache`,
+   `resource_page_name`,
+   `resource_status`,
+   `comments`,
+   `create_time`,
+   `creator`,
+   `update_time`,
+   `operator`,
+   `del_flag`
+)
+VALUES
+(
+   337,
+   0,
+   '微信小程序字段校验是否存在',
+   'gitegg:service:extension::extension:wx:miniapp:check',
+   '4',
+   'xitongrizhi',
+   'check',
+   '/extension/wx/miniapp/check',
+   2,
+   1,
+   1,
+   NULL,
+   '1',
+   '字段校验是否存在微信小程序',
+   NOW(),
+   1,
+   NOW(),
+   1,
+   '0'
+);
+#数据导出
+INSERT INTO `t_sys_resource` (
+   `parent_id`,
+   `tenant_id`,
+   `resource_name`,
+   `resource_key`,
+   `resource_type`,
+   `resource_icon`,
+   `resource_path`,
+   `resource_url`,
+   `resource_level`,
+   `resource_show`,
+   `resource_cache`,
+   `resource_page_name`,
+   `resource_status`,
+   `comments`,
+   `create_time`,
+   `creator`,
+   `update_time`,
+   `operator`,
+   `del_flag`
+)
+VALUES
+(
+   337,
+   0,
+   '微信小程序数据导出',
+   'gitegg:service:extension::extension:wx:miniapp:export',
+   '4',
+   'xitongrizhi',
+   'export',
+   '/extension/wx/miniapp/export',
+   2,
+   1,
+   1,
+   NULL,
+   '1',
+   '数据导出微信小程序',
+   NOW(),
+   1,
+   NOW(),
+   1,
+   '0'
+);
+
+#下载数据导入模板
+INSERT INTO `t_sys_resource` (
+   `parent_id`,
+   `tenant_id`,
+   `resource_name`,
+   `resource_key`,
+   `resource_type`,
+   `resource_icon`,
+   `resource_path`,
+   `resource_url`,
+   `resource_level`,
+   `resource_show`,
+   `resource_cache`,
+   `resource_page_name`,
+   `resource_status`,
+   `comments`,
+   `create_time`,
+   `creator`,
+   `update_time`,
+   `operator`,
+   `del_flag`
+)
+VALUES
+(
+   337,
+   0,
+   '微信小程序数据导入模板下载',
+   'gitegg:service:extension::extension:wx:miniapp:download:template',
+   '4',
+   'xitongrizhi',
+   'download/template',
+   '/extension/wx/miniapp/download/template',
+   2,
+   1,
+   1,
+   NULL,
+   '1',
+   '数据导入模板下载微信小程序',
+   NOW(),
+   1,
+   NOW(),
+   1,
+   '0'
+);
+
+#数据导入
+INSERT INTO `t_sys_resource` (
+   `parent_id`,
+   `tenant_id`,
+   `resource_name`,
+   `resource_key`,
+   `resource_type`,
+   `resource_icon`,
+   `resource_path`,
+   `resource_url`,
+   `resource_level`,
+   `resource_show`,
+   `resource_cache`,
+   `resource_page_name`,
+   `resource_status`,
+   `comments`,
+   `create_time`,
+   `creator`,
+   `update_time`,
+   `operator`,
+   `del_flag`
+)
+VALUES
+(
+   337,
+   0,
+   '微信小程序数据导入',
+   'gitegg:service:extension::extension:wx:miniapp:import',
+   '4',
+   'xitongrizhi',
+   'import',
+   '/extension/wx/miniapp/import',
+   2,
+   1,
+   1,
+   NULL,
+   '1',
+   '数据导入微信小程序',
+   NOW(),
+   1,
+   NOW(),
+   1,
+   '0'
+);

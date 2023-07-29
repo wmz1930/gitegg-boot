@@ -365,6 +365,22 @@ wx:
         token: #微信小程序消息服务器配置的token
         aesKey: #微信小程序消息服务器配置的EncodingAESKey
         msgDataFormat: JSON
+  pay:
+    configs:
+      # v2版本
+      - appId: xxxxxxxxx
+        mchId: xxxxxxxxx
+        mchKey: xxxxxxxxx
+        subAppId: xxxxxxxxx
+        subMchId: xxxxxxxxx
+        keyPath: xxxxxxxxx
+      # v3版本
+      - appId: xxxxxxxxx
+        mchId: 15xxxxxxxxx #商户id
+        apiV3Key: Dc1DBwSc094jACxxxxxxxxxxxxxxx #V3密钥
+        certSerialNo: 62C6CEAA360BCxxxxxxxxxxxxxxx
+        privateKeyPath: classpath:cert/apiclient_key.pem #apiclient_key.pem证书文件的绝对路径或者以classpath:开头的类路径
+        privateCertPath: classpath:cert/apiclient_cert.pem #apiclient_cert.pem证书文件的绝对路径或者以classpath:开头的类路径
 knife4j:
   basic:
     enable: false #开启认证，开发环境不需要认证

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gitegg.boot.extension.wx.pay.mapper.PayMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.gitegg.boot.extension.wx.pay.entity.Pay">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="app_id" property="appId" />
+        <result column="mch_id" property="mchId" />
+        <result column="mch_key" property="mchKey" />
+        <result column="ent_pay_key" property="entPayKey" />
+        <result column="sub_app_id" property="subAppId" />
+        <result column="sub_mch_id" property="subMchId" />
+        <result column="key_path" property="keyPath" />
+        <result column="service_id" property="serviceId" />
+        <result column="cert_serial_no" property="certSerialNo" />
+        <result column="api_v3_key" property="apiV3Key" />
+        <result column="pay_score_notify_url" property="payScoreNotifyUrl" />
+        <result column="pay_score_permission_notify_url" property="payScorePermissionNotifyUrl" />
+        <result column="private_key_path" property="privateKeyPath" />
+        <result column="private_cert_path" property="privateCertPath" />
+        <result column="private_key_content" property="privateKeyContent" />
+        <result column="private_cert_content" property="privateCertContent" />
+        <result column="sign_type" property="signType" />
+        <result column="notify_url" property="notifyUrl" />
+        <result column="http_timeout" property="httpTimeout" />
+        <result column="http_connection_timeout" property="httpConnectionTimeout" />
+        <result column="http_proxy_host" property="httpProxyHost" />
+        <result column="http_proxy_port" property="httpProxyPort" />
+        <result column="http_proxy_username" property="httpProxyUsername" />
+        <result column="http_proxy_password" property="httpProxyPassword" />
+        <result column="use_sandbox_env" property="useSandboxEnv" />
+        <result column="if_save_api_data" property="ifSaveApiData" />
+        <result column="key_content" property="keyContent" />
+        <result column="status" property="status" />
+        <result column="md5" property="md5" />
+        <result column="comments" property="comments" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, app_id, mch_id, mch_key, ent_pay_key, sub_app_id, sub_mch_id, key_path, service_id, cert_serial_no, api_v3_key, pay_score_notify_url, pay_score_permission_notify_url, private_key_path, private_cert_path, private_key_content, private_cert_content, sign_type, notify_url, http_timeout, http_connection_timeout, http_proxy_host, http_proxy_port, http_proxy_username, http_proxy_password, use_sandbox_env, if_save_api_data, key_content, status, md5, comments, tenant_id, create_time, creator, update_time, operator, del_flag
+    </sql>
+
+    <!-- 分页查询微信支付列表 -->
+    <select id="queryPayList" resultType="com.gitegg.boot.extension.wx.pay.dto.PayDTO" parameterType="com.gitegg.boot.extension.wx.pay.dto.QueryPayDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_pay
+        WHERE del_flag = 0
+        <if test="pay.name != null and pay.name != ''">
+            AND name like concat('%', #{pay.name}, '%')
+        </if>
+        <if test="pay.appId != null and pay.appId != ''">
+            AND app_id = #{pay.appId}
+        </if>
+        <if test="pay.mchId != null and pay.mchId != ''">
+            AND mch_id = #{pay.mchId}
+        </if>
+        <if test="pay.status != null and pay.status != ''">
+            AND status = #{pay.status}
+        </if>
+        <if test="pay.payIds != null and pay.payIds.size > 0 ">
+            AND id in
+            <foreach collection="pay.payIds" item ="payId" index="i" open="(" close=")" separator=",">
+                #{payId}
+            </foreach>
+        </if>
+        <if test="pay.beginDateTime != null and pay.beginDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &gt;= DATE_FORMAT(#{pay.beginDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        <if test="pay.endDateTime != null and pay.endDateTime != ''">
+            AND DATE_FORMAT(create_time,'%Y-%m-%d %H:%M:%S') &lt;= DATE_FORMAT(#{pay.endDateTime},'%Y-%m-%d %H:%M:%S')
+        </if>
+        ORDER BY id DESC
+    </select>
+    <!-- 查询微信支付信息 -->
+    <select id="initWxPayList" resultType="com.gitegg.boot.extension.wx.pay.dto.PayDTO" parameterType="com.gitegg.boot.extension.wx.pay.dto.QueryPayDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_pay
+        WHERE del_flag = 0
+        <if test="pay.name != null and pay.name != ''">
+            AND name like concat('%', #{pay.name}, '%')
+        </if>
+        <if test="pay.appId != null and pay.appId != ''">
+            AND app_id = #{pay.appId}
+        </if>
+        <if test="pay.mchId != null and pay.mchId != ''">
+            AND mch_id = #{pay.mchId}
+        </if>
+        <if test="pay.status != null and pay.status != ''">
+            AND status = #{pay.status}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询微信支付信息 -->
+    <select id="getWxPay" resultType="com.gitegg.boot.extension.wx.pay.dto.PayDTO" parameterType="com.gitegg.boot.extension.wx.pay.dto.QueryPayDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_wechat_pay
+        WHERE del_flag = 0
+        <if test="pay.name != null and pay.name != ''">
+            AND name like concat('%', #{pay.name}, '%')
+        </if>
+        <if test="pay.appId != null and pay.appId != ''">
+            AND app_id = #{pay.appId}
+        </if>
+        <if test="pay.mchId != null and pay.mchId != ''">
+            AND mch_id = #{pay.mchId}
+        </if>
+        <if test="pay.status != null and pay.status != ''">
+            AND status = #{pay.status}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

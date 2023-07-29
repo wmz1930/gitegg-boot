@@ -5,6 +5,7 @@ import com.gitegg.boot.extension.justauth.service.IJustAuthConfigService;
 import com.gitegg.boot.extension.justauth.service.IJustAuthSourceService;
 import com.gitegg.boot.extension.mail.service.IMailChannelService;
 import com.gitegg.boot.extension.wx.miniapp.service.IMiniappService;
+import com.gitegg.boot.extension.wx.pay.service.IPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class InitExtensionCacheRunner implements CommandLineRunner {
 
     private final IMiniappService miniappService;
 
+    private final IPayService payService;
+
     @Override
     public void run(String... args) {
 
@@ -45,6 +48,9 @@ public class InitExtensionCacheRunner implements CommandLineRunner {
 
         // 初始化微信配置信息
         miniappService.initMiniappList();
+
+        // 初始化微信支付配置信息
+        payService.initWxPayList();
 
     }
 }

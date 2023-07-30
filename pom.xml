@@ -6,7 +6,7 @@
 
     <groupId>com.gitegg.boot</groupId>
     <artifactId>gitegg-boot</artifactId>
-    <version>1.0.6_9.RELEASE</version>
+    <version>1.0.7.RELEASE</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -32,7 +32,7 @@
         <!-- 项目统一字符集编码UTF-8 -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- GitEgg项目统一设置版本号 -->
-        <gitegg.project.version>1.0.6_9.RELEASE</gitegg.project.version>
+        <gitegg.project.version>1.0.7.RELEASE</gitegg.project.version>
         <!-- SpringBoot版本号 -->
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
     </properties>

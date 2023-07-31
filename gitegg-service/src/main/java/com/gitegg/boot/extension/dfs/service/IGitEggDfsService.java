@@ -21,14 +21,24 @@ public interface IGitEggDfsService {
 
 
     /**
-     * 上传文件
+     * 上传文件(前端)
      *
      * @param dfsCode
      * @param file
      * @return
      */
     GitEggDfsFile uploadFile(String dfsCode, MultipartFile file);
-
+    
+    /**
+     * 上传文件(接口)
+     * @param dfsCode
+     * @param bytes
+     * @param originalName （必传）
+     * @param fileSize
+     * @return
+     */
+    GitEggDfsFile uploadFile(String dfsCode, byte[] bytes, String originalName, Long fileSize);
+    
     /**
      * 获取文件访问链接
      * @param dfsCode
